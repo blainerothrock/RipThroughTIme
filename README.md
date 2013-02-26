@@ -1,17 +1,17 @@
 rip
 ===
 
-Rip Through Time
+Rip Through Time <br>
 
-This is a game created for TEL-T460 at Indiana University.
+This is a game created for TEL-T460 at Indiana University. <br>
 
-Contributions are the following:
---Adam Grabowski - Sound
---Patrick Stefaniak - Art
---Jess Hughes - Art/Visionary
---Kyle Fechtman - Production
---James Cole -- UI Design
---Matthew Gunselman - Art/Design
---Dylan Ayrea - Design/Writing
---Blaine Rothrock - Programming
---Conor Wilson - Programming
+Contributions are the following: <br>
+--Adam Grabowski - Sound <br>
+--Patrick Stefaniak - Art <br>
+--Jess Hughes - Art/Visionary <br>
+--Kyle Fechtman - Production <br>
+--James Cole -- UI Design <br>
+--Matthew Gunselman - Art/Design <br>
+--Dylan Ayrea - Design/Writing <br>
+--Blaine Rothrock - Programming <br>
+--Conor Wilson - Programming <br>
