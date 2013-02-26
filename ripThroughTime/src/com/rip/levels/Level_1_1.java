@@ -6,6 +6,7 @@ import java.util.Random;
 import renderers.LevelRender;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.rip.RipGame;
 import com.rip.objects.Ape;
 import com.rip.objects.Enemy;
@@ -20,15 +21,21 @@ public class Level_1_1 {
 	LevelRender lr;
 	ArrayList<Enemy> enemies;
 		
+	Music leveltheme;
+	
 	public Level_1_1(RipGame game) {
 			this.game = game;
 			enemies = new ArrayList<Enemy>();
 			this.player = new Player(250, 158);
 			Gdx.input.setInputProcessor(new InputHandler(this));
-//			Raptor raptor_one = new Raptor(800, 50);
-//			Raptor raptor_two = new Raptor(500, 150);
-//			enemies.add(raptor_one);
-//			enemies.add(raptor_two);
+			/*
+			Raptor raptor_one = new Raptor(800, 50);
+			Raptor raptor_two = new Raptor(500, 150);
+			enemies.add(raptor_one);
+			enemies.add(raptor_two);
+			*/
+			leveltheme = Gdx.audio.newMusic(Gdx.files.internal("data/Prehistoric Main.mp3"));
+			leveltheme.setLooping(true);
 	}
 	
 	public void checkPoint(int numOfEnemiesRap, int numOfEnemiesApe) {
@@ -36,7 +43,7 @@ public class Level_1_1 {
 		int rightside;
 		int leftside;
 		boolean lr;
-		
+
 		for (int i = 0; i < numOfEnemiesRap; i++) {
 			lr = r.nextBoolean();
 			if (lr) {
@@ -46,9 +53,9 @@ public class Level_1_1 {
 				leftside = LevelRender.camPos;
 				enemies.add(new Raptor(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
 			}
-			
+
 		}
-		
+
 		for (int i = 0; i < numOfEnemiesApe; i++) {
 			lr = r.nextBoolean();
 			if (lr) {
@@ -58,7 +65,7 @@ public class Level_1_1 {
 				leftside = LevelRender.camPos;
 				enemies.add(new Ape(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
 			}
-			
+
 		}
 	}
 	
@@ -91,7 +98,14 @@ public class Level_1_1 {
 	
 	public void dispose() {
 		
-	}	
+	}
+
+
+	public Music getLeveltheme() {
+		return leveltheme;
+	}
+
+	
 	
 }
 

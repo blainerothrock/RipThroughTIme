@@ -1,0 +1,53 @@
+rip_kick.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+RIPKick_0000_Layer-1
+  rotate: false
+  xy: 2, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPKick_0002_Layer-3
+  rotate: false
+  xy: 262, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPKick_0005_Layer-6
+  rotate: false
+  xy: 652, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPKick_0006_Layer-7
+  rotate: false
+  xy: 782, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPKick_0003_Layer-4
+  rotate: false
+  xy: 392, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPKick_0004_Layer-5
+  rotate: false
+  xy: 522, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPKick_0001_Layer-2
+  rotate: false
+  xy: 132, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1

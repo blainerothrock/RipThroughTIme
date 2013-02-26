@@ -2,6 +2,7 @@ package com.rip.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Enemy extends MovableEntity {
 
@@ -49,6 +50,5 @@ public abstract class Enemy extends MovableEntity {
 	public void setDir(Directions dir) {
 		this.dir = dir;
 	}
-	
 
 }

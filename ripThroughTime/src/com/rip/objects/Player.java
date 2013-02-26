@@ -1,11 +1,18 @@
 package com.rip.objects;
 
+
+//NOTE TO SELF
+// RIGHT NOW HITBOX IS TIDE TO TEXTURE AND NOT ANIMATION 
+//FIX IT!
+
 import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -14,6 +21,62 @@ public class Player extends MovableEntity {
 	Texture punch;
 	float health;
 	float attack_damage;
+	float time;
+	boolean timeFreeze;
+	
+	boolean ATTACK_ANIMATION = false;
+	
+	//The player class has several animations
+	////At any given time, the renderer can only 
+	////access the current frame from the current
+	////animation
+	protected Animation player_animation;
+	protected TextureRegion currentFrame;
+	protected float stateTime = 0f;
+	
+	//Walk Animation
+	private static final int WALK_COLS = 7;
+	private static final int WALK_ROWS = 1;
+	
+	protected Animation walkAnimationRight;
+	protected Animation walkAnimationLeft;
+	protected Texture walkSheet;
+	protected TextureRegion[] walkFramesRight;
+	protected TextureRegion[] walkFramesLeft;
+	protected TextureRegion currentwalkFrame;
+	
+    float walkTime = 0f;
+    
+	//Kick Animation
+    private static final int KICK_COLS = 7;
+	private static final int KICK_ROWS = 1;
+	
+	protected Animation kickAnimationRight;
+	protected Animation kickAnimationLeft;
+	protected Texture kickSheet;
+	protected TextureRegion[] kickFramesRight;
+	protected TextureRegion[] kickFramesLeft;
+	protected TextureRegion currentkickFrame;
+	
+    float kickTime = 0f;
+	
+	//Hit Animation
+	
+	//Punch Animation
+	private static final int PUNCH_COLS = 5;
+	private static final int PUNCH_ROWS = 1;
+	
+	protected Animation punchAnimationRight;
+	protected Animation punchAnimationLeft;
+	protected Texture punchSheet;
+	protected TextureRegion[] punchFramesRight;
+	protected TextureRegion[] punchFramesLeft;
+	protected TextureRegion currentpunchFrame;
+	
+    float punchTime = 0f;
+    
+
+    
 	
 	Random rand = new Random();
 	
@@ -41,13 +104,116 @@ public class Player extends MovableEntity {
 		super(x, y, width, height, SPEED, text);
 		this.health = 100;
 		this.attack_damage = 10;
+		this.time = 100;
+		timeFreeze = false;
+		CreateAnimations();
 	}
 	
 	public Player(int x, int y) {
-		super(x, y, 128, 162, 3, RIGHT);
+		super(x, y, 128, 163, 3, RIGHT);
 		this.health = 100;
 		this.attack_damage = 10;
+		this.time = 100;
+		timeFreeze = false;
+		CreateAnimations();
 	}
+	
+	public void CreateAnimations() {
+		int index;
+		
+		//Initiate Walk Animation
+		TextureRegion temp;
+		walkSheet = new Texture(Gdx.files.internal("data/rip_walk.png"));
+		TextureRegion[][] tmpwRight = TextureRegion.split(walkSheet, walkSheet.getWidth() / WALK_COLS, walkSheet.getHeight() / WALK_ROWS);
+		TextureRegion[][] tmpwLeft = TextureRegion.split(walkSheet, walkSheet.getWidth() / WALK_COLS, walkSheet.getHeight() / WALK_ROWS);
+		walkFramesRight = new TextureRegion[WALK_COLS * WALK_ROWS];
+		walkFramesLeft = new TextureRegion[WALK_COLS * WALK_ROWS];
+		index = 0;
+		for (int i = 0; i < WALK_ROWS; i++) {
+			for (int j = 0; j < WALK_COLS; j++) {
+				temp = tmpwRight[i][j];
+				walkFramesRight[index] = temp;
+				//walkFramesLeft[index] = temp;
+				index++;
+			}
+		}
+		
+		
+		index = 0;
+		for (int i = 0; i < WALK_ROWS; i++) {
+			for (int j = 0; j < WALK_COLS; j++) {
+				temp = tmpwLeft[i][j];
+				walkFramesLeft[index] = temp;
+				walkFramesLeft[index].flip(true, false);
+				index++;
+			}
+		}
+		/*
+		for (TextureRegion region : walkFramesLeft) {
+			region.flip(true, false);
+		}
+		*/
+		walkAnimationRight = new Animation(0.1f, walkFramesRight);
+		walkAnimationLeft = new Animation(0.1f, walkFramesLeft);
+		
+		//Initiate Kick Animation
+		kickSheet = new Texture(Gdx.files.internal("data/rip_kick.png"));
+		TextureRegion[][] tmpkRight = TextureRegion.split(kickSheet, kickSheet.getWidth() / KICK_COLS, kickSheet.getHeight() / KICK_ROWS);
+		TextureRegion[][] tmpkLeft = TextureRegion.split(kickSheet, kickSheet.getWidth() / KICK_COLS, kickSheet.getHeight() / KICK_ROWS);
+		kickFramesRight = new TextureRegion[KICK_COLS * KICK_ROWS];
+		kickFramesLeft = new TextureRegion[KICK_COLS * KICK_ROWS];
+		index = 0;
+		for (int i = 0; i < KICK_ROWS; i++) {
+			for (int j = 0; j < KICK_COLS; j++) {
+				kickFramesRight[index++] = tmpkRight[i][j];
+			}
+		}
+		
+		index = 0;
+		for (int i = 0; i < KICK_ROWS; i++) {
+			for (int j = 0; j < KICK_COLS; j++) {
+				kickFramesLeft[index] = tmpkLeft[i][j];
+				kickFramesLeft[index].flip(true, false);
+				index++;
+			}
+		}
+		kickAnimationRight = new Animation(0.05f, kickFramesRight);
+		kickAnimationLeft = new Animation(0.05f, kickFramesLeft);
+		
+		
+		//Initiate Hit Animation
+		
+		//Initiate Punch Animation
+		punchSheet = new Texture(Gdx.files.internal("data/rip_punch.png"));
+		TextureRegion[][] tmppRight = TextureRegion.split(punchSheet, punchSheet.getWidth() / PUNCH_COLS, punchSheet.getHeight() / PUNCH_ROWS);
+		TextureRegion[][] tmppLeft = TextureRegion.split(punchSheet, punchSheet.getWidth() / PUNCH_COLS, punchSheet.getHeight() / PUNCH_ROWS);
+		punchFramesRight = new TextureRegion[PUNCH_COLS * PUNCH_ROWS];
+		punchFramesLeft = new TextureRegion[PUNCH_COLS * PUNCH_ROWS];
+		index = 0;
+		for (int i = 0; i < PUNCH_ROWS; i++) {
+			for (int j = 0; j < PUNCH_COLS; j++) {
+				punchFramesRight[index++] = tmppRight[i][j];
+			}
+		}
+		
+		index = 0;
+		for (int i = 0; i < PUNCH_ROWS; i++) {
+			for (int j = 0; j < PUNCH_COLS; j++) {
+				punchFramesLeft[index] = tmppLeft[i][j];
+				punchFramesLeft[index].flip(true, false);
+				index++;
+			}
+		}
+		punchAnimationRight = new Animation(0.07f, punchFramesRight);
+		punchAnimationLeft = new Animation(0.07f, punchFramesLeft);
+		
+		
+		//Set player_animation
+		player_animation = walkAnimationRight;
+		currentFrame = player_animation.getKeyFrame(stateTime, true);
+		
+	}
+	
 	
 	
 	public float getHealth() {
@@ -58,6 +224,26 @@ public class Player extends MovableEntity {
 
 	public void setHealth(float health) {
 		this.health = health;
+	}
+	
+	public float getTime() {
+		return time;
+	}
+	
+	public void setTime(float time) {
+		this.time = time;
+	}
+	
+	public boolean getTimeFreeze() {
+		return timeFreeze;
+	}
+	
+	public void flipTimeFreeze() {
+		if (timeFreeze == false) {
+			timeFreeze = true;
+		} else {
+			timeFreeze = false;
+		}
 	}
 
 
@@ -205,9 +391,103 @@ public class Player extends MovableEntity {
 	public static Texture getRight() {
 		return RIGHT;
 	}
+
 	
+	public Animation getPlayer_animation() {
+		return player_animation;
+	}
+
+	public void setPlayer_animation(Animation player_animation) {
+		this.player_animation = player_animation;
+	}
+
+	public void setCurrentFrame(float delta) {
+		this.stateTime += delta;
+		this.currentFrame = player_animation.getKeyFrame(stateTime, true);
+		/*
+		if (player_animation == this.kickAnimationLeft || player_animation == this.kickAnimationRight
+			|| player_animation == this.punchAnimationLeft || player_animation == this.punchAnimationRight) {
+			this.currentFrame = player_animation.getKeyFrame(stateTime, false);
+		} else {
+			this.currentFrame = player_animation.getKeyFrame(stateTime, true);
+		}
+		*/
+	}
+
+	public void setCurrentFrame(TextureRegion currentFrame) {
+		this.currentFrame = currentFrame;
+	}
+	public TextureRegion getCurrentFrame() {
+		return currentFrame;
+	}
+
+	public Animation getWalkAnimationRight() {
+		return walkAnimationRight;
+	}
+
+	public void setWalkAnimationRight(Animation walkAnimationRight) {
+		this.walkAnimationRight = walkAnimationRight;
+	}
+
+	public Animation getWalkAnimationLeft() {
+		return walkAnimationLeft;
+	}
+
+	public void setWalkAnimationLeft(Animation walkAnimationLeft) {
+		this.walkAnimationLeft = walkAnimationLeft;
+	}
+
+	public Animation getKickAnimationRight() {
+		return kickAnimationRight;
+	}
+
+	public void setKickAnimationRight(Animation kickAnimationRight) {
+		this.kickAnimationRight = kickAnimationRight;
+	}
+
+	public Animation getKickAnimationLeft() {
+		return kickAnimationLeft;
+	}
+
+	public void setKickAnimationLeft(Animation kickAnimationLeft) {
+		this.kickAnimationLeft = kickAnimationLeft;
+	}
+
+	public Animation getPunchAnimationRight() {
+		return punchAnimationRight;
+	}
+
+	public void setPunchAnimationRight(Animation punchAnimationRight) {
+		this.punchAnimationRight = punchAnimationRight;
+	}
+
+	public Animation getPunchAnimationLeft() {
+		return punchAnimationLeft;
+	}
+
+	public void setPunchAnimationLeft(Animation punchAnimationLeft) {
+		this.punchAnimationLeft = punchAnimationLeft;
+	}
+
+	public float getStateTime() {
+		return stateTime;
+	}
+
+	public void setStateTime(float stateTime) {
+		this.stateTime = stateTime;
+	}
+
+	public boolean isATTACK_ANIMATION() {
+		return ATTACK_ANIMATION;
+	}
+
+	public void setATTACK_ANIMATION(boolean aTTACK_ANIMATION) {
+		ATTACK_ANIMATION = aTTACK_ANIMATION;
+	}
+
+
 	
-	
+
 	
 	
 }

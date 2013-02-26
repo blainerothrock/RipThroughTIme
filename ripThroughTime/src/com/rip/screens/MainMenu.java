@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -32,15 +31,18 @@ public class MainMenu implements Screen {
 	TextButton creditsButton;
 	
 	Music maintheme;
-	Sound select;
+	Music selectPlay;
 	
 	public MainMenu(RipGame game) {
 		this.game = game;
-		/*
-		maintheme = Gdx.audio.newMusic(Gdx.files.internal("data/MainMenu.wav"));
+		
+		maintheme = Gdx.audio.newMusic(Gdx.files.internal("data/Main Menu.mp3"));
 		maintheme.setLooping(true);
 		maintheme.play();
-		*/
+		
+		selectPlay = Gdx.audio.newMusic(Gdx.files.internal("data/Main Menu Select.mp3"));
+		selectPlay.setLooping(false);
+		
 	}
 
 	@Override
@@ -96,9 +98,9 @@ public class MainMenu implements Screen {
 			
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				Gdx.app.log(RipGame.LOG, "Start Game: pushed");
-				//maintheme.stop();
-				select = (Gdx.audio.newSound(Gdx.files.internal("data/MainMenuSelect.wav")));
-				select.play(1.0f);
+				maintheme.stop();
+				selectPlay.play();
+				
 				game.setScreen(new GameScreen(game));
 			}
 		});
@@ -164,8 +166,8 @@ public class MainMenu implements Screen {
 		black.dispose();
 		stage.dispose();
 		
-		select.dispose();
-		//maintheme.dispose();
+		selectPlay.dispose();
+		maintheme.dispose();
 	}
 
 }

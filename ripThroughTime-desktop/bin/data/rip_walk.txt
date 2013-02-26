@@ -1,0 +1,53 @@
+rip_walk.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+RIPWalk_0005_RIPWalk6
+  rotate: false
+  xy: 652, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPWalk_0001_RIPWalk2
+  rotate: false
+  xy: 132, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPWalk_0000_RIPWalk1
+  rotate: false
+  xy: 2, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPWalk_0006_RIPWalk7
+  rotate: false
+  xy: 782, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPWalk_0002_RIPWalk3
+  rotate: false
+  xy: 262, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPWalk_0003_RIPWalk4
+  rotate: false
+  xy: 392, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1
+RIPWalk_0004_RIPWalk5
+  rotate: false
+  xy: 522, 2
+  size: 128, 163
+  orig: 128, 163
+  offset: 0, 0
+  index: -1

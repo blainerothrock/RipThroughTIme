@@ -1,0 +1,151 @@
+rip_sprites.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+RIPwalk2
+  rotate: false
+  xy: 2657, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPwalk6
+  rotate: false
+  xy: 3365, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPpunch4
+  rotate: false
+  xy: 2126, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPkick4
+  rotate: false
+  xy: 887, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPwalk3
+  rotate: false
+  xy: 2834, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPpunch1
+  rotate: false
+  xy: 1595, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPwalk7
+  rotate: false
+  xy: 3542, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPkick1
+  rotate: false
+  xy: 356, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPpunch5
+  rotate: false
+  xy: 2303, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPkick5
+  rotate: false
+  xy: 1064, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPwalk4
+  rotate: false
+  xy: 3011, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPpunch2
+  rotate: false
+  xy: 1772, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPhit2
+  rotate: false
+  xy: 179, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPkick2
+  rotate: false
+  xy: 533, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPkick6
+  rotate: false
+  xy: 1241, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPwalk1
+  rotate: false
+  xy: 2480, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPwalk5
+  rotate: false
+  xy: 3188, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPhit1
+  rotate: false
+  xy: 2, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPpunch3
+  rotate: false
+  xy: 1949, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPkick3
+  rotate: false
+  xy: 710, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1
+RIPkick7
+  rotate: false
+  xy: 1418, 2
+  size: 175, 175
+  orig: 175, 175
+  offset: 0, 0
+  index: -1

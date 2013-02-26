@@ -8,11 +8,17 @@ import com.rip.screens.MainMenu;
 
 public class RipGame extends Game {
 	
-	public static final String VERSION = "0.0.04 pre-alpha";
+	public static final String VERSION = "0.0.01 pre-alpha";
 	public static final String LOG = "";
 	
 	public static final int WIDTH = 960;
 	public static final int HEIGHT = 480;
+	
+//	public OrthographicCamera camera;
+//	private SpriteBatch batch;
+//	private Texture texture;
+//	private Sprite sprite;
+	
 	
 	@Override
 	public void create() {	

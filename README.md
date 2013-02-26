@@ -1,4 +1,4 @@
-RipThroughTIme
-==============
+rip
+===
 
-LibGDX game
+Rip Through TIme

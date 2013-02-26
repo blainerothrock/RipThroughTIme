@@ -32,12 +32,18 @@ public abstract class MovableEntity extends Entity {
 	public MovableEntity(int x, int y, float width, float height, int SPEED) {
 		super(x, y, width, height);
 		this.SPEED = SPEED;
+		//this.createAnimations();
 
 	}
 	
 	public MovableEntity(int x, int y, float width, float height, int SPEED, Texture texture) {
 		super(x, y, width, height, texture);
 		this.SPEED = SPEED;
+		//this.createAnimations();
+	}
+	
+	public void createAnimations() {
+		
 	}
 
 	public int getSPEED() {
@@ -131,18 +137,18 @@ public abstract class MovableEntity extends Entity {
 	public void track(Player p) {
 		int pX = p.getX();
 		int pY = p.getY();
-		
+
 		int dx = pX - x;
 		int dy = pY - y;
-		
+
 		this.setX(this.getX() + (int)((dx - this.SPEED) * LevelRender.delta));
-			
-	
+
+
 		this.setY(this.getY() + (int)((dy - this.SPEED) * LevelRender.delta));
-		
-		
+
+
 	}
-	
+
 	
 
 }
