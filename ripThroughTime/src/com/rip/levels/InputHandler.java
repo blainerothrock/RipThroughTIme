@@ -98,6 +98,7 @@ public class InputHandler implements InputProcessor {
 		
 		case Keys.O:
 			player.flipTimeFreeze();
+			break;
 		
 		default:
 			break;

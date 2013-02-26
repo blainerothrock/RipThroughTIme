@@ -320,27 +320,7 @@ public class LevelRender {
 		}
 		batch.begin();
 		sr.begin(ShapeType.Rectangle);
-		/*
-		//Will need to implement a layered system in which entities at a higher Y value are drawn first
-		batch.begin();
-		sr.begin(ShapeType.Rectangle);
 		
-		batch.draw(bg.getTexture(), bg.getX(), bg.getY());
-		
-		for (BackgroundObject i : volcanos) {
-			batch.draw(i.getTexture(), i.getX(), i.getY());
-		}
-		
-		for (BackgroundObject i : trees) {
-			batch.draw(i.getTexture(), i.getX(), i.getY());
-		}
-		
-		batch.draw(fg.getTexture(), fg.getX(), fg.getY());
-		
-		for (BackgroundObject i : bushes) {
-			batch.draw(i.getTexture(), i.getX(), i.getY());
-		}
-		*/
 		
 //////////RENDER ALL BACKGROUND OBJECTS//////////
 
