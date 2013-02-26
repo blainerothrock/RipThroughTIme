@@ -39,7 +39,15 @@ public class LevelRender {
 	
 	public static float delta;
 	
+	
+	//Load textures
 	Texture playerTexture;
+	Texture timeFreezeOverlay = new Texture(Gdx.files.internal("data/timeFreezeOverlay.png"));
+	Texture timebaroutline = new Texture(Gdx.files.internal("data/timebaroutline.png"));
+	Texture timebar = new Texture(Gdx.files.internal("data/timebar.png"));
+	Texture healthbaroutline = new Texture(Gdx.files.internal("data/healthbaroutline.png"));
+	Texture healthbar = new Texture(Gdx.files.internal("data/healthbar.png"));
+	
 	ShapeRenderer sr;
 	Player player;
 	int width, height;
@@ -416,8 +424,17 @@ public class LevelRender {
 			sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
 			//sr.rect(me.getX(), me.getY(), me.hitableBox.width, me.hitableBox.height);
 		}	
-
-
+		
+		batch.draw(healthbar, camPos + 25, 450, player.getHealth()*2, 15);
+		batch.draw(healthbaroutline, camPos + 25 - 3, 450 - 3, 206, 21);
+		
+		if (player.getTimeFreeze() == true || Gdx.input.isKeyPressed(Keys.SPACE)) {
+			batch.draw(timeFreezeOverlay, camPos, 0);
+		}
+		
+		batch.draw(timebar, camPos + 25, 425, player.getTime()*2, 15);
+		batch.draw(timebaroutline, camPos + 25 - 3, 425 - 3, 206, 21);
+		
 		batch.draw(player.getCurrentFrame(), player.getX(), player.getY());
 		sr.rect(player.hitableBox.x, player.hitableBox.y, player.hitableBox.width, player.hitableBox.height);
 		sr.rect(player.punchBoxLeft.x, player.punchBoxLeft.y, player.punchBoxLeft.width, player.punchBoxLeft.height);
@@ -425,14 +442,8 @@ public class LevelRender {
 		
 		//////////DRAW HUD//////////
 		
-		Texture healthbaroutline = new Texture(Gdx.files.internal("data/healthbaroutline.png"));
-		Texture healthbar = new Texture(Gdx.files.internal("data/healthbar.png"));
-		Texture timebaroutline = new Texture(Gdx.files.internal("data/timebaroutline.png"));
-		Texture timebar = new Texture(Gdx.files.internal("data/timebar.png"));
-		batch.draw(healthbar, camPos + 25, 450, player.getHealth()*2, 15);
-		batch.draw(healthbaroutline, camPos + 25 - 3, 450 - 3, 206, 21);
-		batch.draw(timebar, camPos + 25, 425, player.getTime()*2, 15);
-		batch.draw(timebaroutline, camPos + 25 - 3, 425 - 3, 206, 21);
+		
+		
 
 		batch.end();
 		sr.end();
