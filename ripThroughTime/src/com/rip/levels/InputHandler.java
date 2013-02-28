@@ -2,6 +2,8 @@ package com.rip.levels;
 
 import java.util.ArrayList;
 
+import renderers.LevelRender;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
@@ -98,7 +100,15 @@ public class InputHandler implements InputProcessor {
 		
 		case Keys.O:
 			player.flipTimeFreeze();
+//			LevelRender.move = ! LevelRender.move;
 			break;
+			
+		case Keys.P:
+			if (LevelRender.pause == false) {
+				LevelRender.pause = true;
+			} else {
+				LevelRender.pause = false;
+			}
 		
 		default:
 			break;

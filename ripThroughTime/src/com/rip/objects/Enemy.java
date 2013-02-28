@@ -43,9 +43,10 @@ public abstract class Enemy extends MovableEntity {
 		this.health = health;
 	}
 
-	public Directions getDir() {
-		return dir;
-	}
+//	@Override
+//	public Directions getDir() {
+//		return dir;
+//	}
 
 	public void setDir(Directions dir) {
 		this.dir = dir;

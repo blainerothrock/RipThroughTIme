@@ -48,7 +48,10 @@ public class Level_1_1 {
 			lr = r.nextBoolean();
 			if (lr) {
 				rightside = LevelRender.camPos + RipGame.WIDTH;
-				enemies.add(new Raptor(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRender.Y_LIMIT)));
+				Raptor raptor = new Raptor(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRender.Y_LIMIT));
+				raptor.flipDir();
+				enemies.add(raptor);
+				
 			} else {
 				leftside = LevelRender.camPos;
 				enemies.add(new Raptor(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));

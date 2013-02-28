@@ -8,13 +8,16 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 import com.rip.RipGame;
 import com.rip.levels.Level_1_1;
@@ -39,6 +42,8 @@ public class LevelRender {
 	
 	public static float delta;
 	
+	public Random r = new Random();
+	
 	
 	//Load textures
 	Texture playerTexture;
@@ -47,11 +52,18 @@ public class LevelRender {
 	Texture timebar = new Texture(Gdx.files.internal("data/timebar.png"));
 	Texture healthbaroutline = new Texture(Gdx.files.internal("data/healthbaroutline.png"));
 	Texture healthbar = new Texture(Gdx.files.internal("data/healthbar.png"));
+	Texture pauseOverlay = new Texture(Gdx.files.internal("data/pauseOverlay.png"));
+	Texture timeFreezeLine = new Texture(Gdx.files.internal("data/timeLine.png"));
+	
+	BitmapFont font = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack18.fnt"),false);
+	BitmapFont fontBig = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack32.fnt"),false);
+	
 	
 	ShapeRenderer sr;
 	Player player;
 	int width, height;
 	public final static int Y_LIMIT = 180;
+	public static boolean pause = false;
 	
 
 	ArrayList<Enemy> enemy_list;
@@ -66,12 +78,15 @@ public class LevelRender {
 	Background bg;
 	Background fg;
 	
+	public float levelTime = 0;
+	public int levelScore = 0;
+	
 	float stateTime = 0f;
 	//float delta;
 	
 	
 	// Boolean value states whether or not the world will continue to scroll
-	boolean move = true;
+	public static boolean move = true;
 	
 	BackgroundObject sk;
 	Array<BackgroundObject> grounds = new Array<BackgroundObject>(5);
@@ -110,7 +125,7 @@ public class LevelRender {
 		
 //////////GENERATE ALL BACKGROUND OBJECTS//////////		
 
-		Random r = new Random();
+		
 
 		int levelLength = 13000;
 		
@@ -255,11 +270,15 @@ public class LevelRender {
 				return a.getY() >= b.getY() ? -1 : 1;
 			}
 		});
+		
+		batch.begin();
+		sr.begin(ShapeType.Rectangle);
 	
 		
 //////////CHECKPOINT HANDLING//////////
 
 		if (level.getEnemies().isEmpty() && move == false && camPos < 11500) {
+//	        fontBig.draw(batch, "GO!", camPos + 950, RipGame.HEIGHT/2 - 16);
 			move = true;
 		}
 
@@ -326,9 +345,6 @@ public class LevelRender {
 			move = false;
 			Gdx.app.log(RipGame.LOG, "End Level 1-1");
 		}
-		batch.begin();
-		sr.begin(ShapeType.Rectangle);
-		
 		
 //////////RENDER ALL BACKGROUND OBJECTS//////////
 
@@ -425,11 +441,28 @@ public class LevelRender {
 			//sr.rect(me.getX(), me.getY(), me.hitableBox.width, me.hitableBox.height);
 		}	
 		
+        //////////DRAW HUD//////////
+		
+		font.draw(batch, "World  1   Level  1", camPos + 800, 470);
+		
+		if (player.getTimeFreeze() == false) {
+			levelTime = (float)levelTime + delta;
+		}
+		
+		font.draw(batch, "Time:     " + (int)levelTime, camPos + 800, 450);
+		
+		font.draw(batch, "Score:     " + levelScore, camPos + 800, 430);
+		
 		batch.draw(healthbar, camPos + 25, 450, player.getHealth()*2, 15);
 		batch.draw(healthbaroutline, camPos + 25 - 3, 450 - 3, 206, 21);
 		
-		if (player.getTimeFreeze() == true || Gdx.input.isKeyPressed(Keys.SPACE)) {
+		if (player.getTimeFreeze() == true) {
 			batch.draw(timeFreezeOverlay, camPos, 0);
+			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
 		}
 		
 		batch.draw(timebar, camPos + 25, 425, player.getTime()*2, 15);
@@ -440,13 +473,14 @@ public class LevelRender {
 		sr.rect(player.punchBoxLeft.x, player.punchBoxLeft.y, player.punchBoxLeft.width, player.punchBoxLeft.height);
 		sr.rect(player.punchBoxRight.x, player.punchBoxRight.y, player.punchBoxRight.width, player.punchBoxRight.height);
 		
-		//////////DRAW HUD//////////
-		
-		
-		
+//		if (pause == true) {
+//			batch.draw(pauseOverlay,camPos,0);
+//		}
 
+		
 		batch.end();
 		sr.end();
+		
 
 		//////////RENDER ENEMY TRACKING (AI) & RIP TIME//////////
 
