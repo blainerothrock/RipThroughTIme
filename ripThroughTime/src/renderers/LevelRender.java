@@ -44,7 +44,6 @@ public class LevelRender {
 	
 	public Random r = new Random();
 	
-	
 	//Load textures
 	Texture playerTexture;
 	Texture timeFreezeOverlay = new Texture(Gdx.files.internal("data/timeFreezeOverlay.png"));
@@ -64,7 +63,6 @@ public class LevelRender {
 	int width, height;
 	public final static int Y_LIMIT = 180;
 	public static boolean pause = false;
-	
 
 	ArrayList<Enemy> enemy_list;
 	ArrayList<MovableEntity> drawables;
