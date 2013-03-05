@@ -48,13 +48,14 @@ public class Level_1_1 {
 			lr = r.nextBoolean();
 			if (lr) {
 				rightside = LevelRender.camPos + RipGame.WIDTH;
-				Raptor raptor = new Raptor(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRender.Y_LIMIT));
+				Raptor raptor = new Raptor(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 400)) + (rightside + 400), r.nextInt(LevelRender.Y_LIMIT));
 				raptor.flipDir();
+				raptor.spawnPoint = true;
 				enemies.add(raptor);
 				
 			} else {
 				leftside = LevelRender.camPos;
-				enemies.add(new Raptor(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
+				enemies.add(new Raptor(r.nextInt((leftside - 400) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
 			}
 
 		}
@@ -63,10 +64,12 @@ public class Level_1_1 {
 			lr = r.nextBoolean();
 			if (lr) {
 				rightside = LevelRender.camPos + RipGame.WIDTH;
-				enemies.add(new Ape(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRender.Y_LIMIT)));
+				Ape ape = new Ape(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 400)) + (rightside + 400), r.nextInt(LevelRender.Y_LIMIT));
+				ape.spawnPoint = true;
+				enemies.add(ape);
 			} else {
 				leftside = LevelRender.camPos;
-				enemies.add(new Ape(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
+				enemies.add(new Ape(r.nextInt((leftside - 400) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
 			}
 
 		}

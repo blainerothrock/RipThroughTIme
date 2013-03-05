@@ -39,7 +39,8 @@ public abstract class MovableEntity extends Entity {
 	int trackY;
 	boolean flankPoint1;
 	boolean flankPoint2;
-	boolean flankPoint3;
+	
+	public boolean spawnPoint = false; // true = right (facing left), false = left (facing right)
 
 	public MovableEntity(int x, int y, float width, float height, int SPEED) {
 		super(x, y, width, height);
@@ -55,7 +56,6 @@ public abstract class MovableEntity extends Entity {
 			trackY = 0;
 			flankPoint1 = false;
 			flankPoint2 = false;
-			flankPoint3 = false;
 		}
 
 	}
@@ -65,16 +65,15 @@ public abstract class MovableEntity extends Entity {
 		this.SPEED = SPEED;
 		//this.createAnimations();
 		
-		if (r.nextInt(4) < 3) {
-			flank = false;
-		} else {
+//		if (r.nextInt(4) < 3) {
+//			flank = false;
+//		} else {
 			flank = true;
 			trackX = 0;
 			trackY = 0;
 			flankPoint1 = false;
 			flankPoint2 = false;
-			flankPoint3 = false;
-		}
+//		}
 	}
 	
 	public void createAnimations() {
@@ -187,8 +186,24 @@ public abstract class MovableEntity extends Entity {
 //		Gdx.app.log(RipGame.LOG, "flank: " + flank);
 		
 		if (flank == false) {
-			int pX = p.getX();
-			int pY = p.getY();
+			int pX;
+			int pY;
+			boolean positiveY = r.nextBoolean(); 
+			boolean positiveX = r.nextBoolean();
+			
+			if (positiveX) {
+				pX = p.getX() + r.nextInt(50);
+			} else {
+				pX = p.getX() - r.nextInt(50);
+			}
+			
+			if (positiveY) {
+				pY = p.getY() + r.nextInt(50);
+			} else {
+				pY = p.getY() - r.nextInt(50);
+			}
+			
+			if (pY > 180) { pY = 180; }
 
 			dx = pX - x;
 			dy = pY - y;
@@ -208,42 +223,31 @@ public abstract class MovableEntity extends Entity {
 			} else if (flankPoint1 == false) {
 				dx = trackX - x;
 				dy = trackY - y;
-				this.setX(this.getX() + (int)((dx - this.SPEED) * LevelRender.delta));
-				this.setY(this.getY() + (int)((dy - this.SPEED) * LevelRender.delta));
-				if (x <= trackX + 100 && x >= trackX - 100 && y <= trackY + 100 && y >= trackY - 100 ) {
+				this.setX(this.getX() + (int)((dx - this.SPEED + 2) * LevelRender.delta));
+				this.setY(this.getY() + (int)((dy - this.SPEED + 2) * LevelRender.delta));
+				if (x <= trackX + this.width + 10 && x >= trackX - this.width + 10 && y <= trackY + this.height + 10 && y >= trackY - this.height + 10 ) {
 					flankPoint1 = true;
 					Gdx.app.log(RipGame.LOG, "flankPoin1 = " + flankPoint1);
-					if (dir == Directions.DIR_LEFT) {
-						trackX = p.getX() - (r.nextInt(300-100) + 100);
-						trackY = p.getY() - (r.nextInt(200-100) + 100);
+					if (spawnPoint) {
+						trackX = p.getX() - (r.nextInt(500-300) + 300);
+						trackY = p.getY();
 					} else {
-						trackX = p.getX() + (r.nextInt(300-100) + 100);
-						trackY = p.getY() - (r.nextInt(200-100) + 100);
+						trackX = p.getX() + (r.nextInt(500-300) + 300);
+						trackY = p.getY();
 					}
 				}
 			} else if (flankPoint2 == false) {
 				dx = trackX - x;
 				dy = trackY - y;
-				setX(getX() + (int)((dx - SPEED) * LevelRender.delta));
-				setY(getY() + (int)((dy - SPEED) * LevelRender.delta));
-				if (x <= trackX + 100 && x >= trackX - 100 && y <= trackY + 100 && y >= trackY - 100 ) {
+				setX(getX() + (int)((dx - SPEED + 2) * LevelRender.delta));
+				setY(getY() + (int)((dy - SPEED + 2) * LevelRender.delta));
+				if (x <= trackX + this.width + 10 && x >= trackX - this.width + 10 && y <= trackY + this.height + 10 && y >= trackY - this.height + 10 ) {
 					flankPoint2 = true;
-					trackY = p.getY();
-					}
-			} else if (flankPoint3 == false) {
-				dx = trackX - x;
-				dy = trackY - y;
-				setX(getX() + (int)((dx - SPEED) * LevelRender.delta));
-				setY(getY() + (int)((dy - SPEED) * LevelRender.delta));
-				if (x <= trackX + 100 && x >= trackX - 100 && y <= trackY + 100 && y >= trackY - 100 ) {
-					flankPoint3 = true;
-					trackX = p.getX();
 					trackY = p.getY();
 					flank = false;
 					}
-				}
+			} 
 		}
-
 
 	}
 
