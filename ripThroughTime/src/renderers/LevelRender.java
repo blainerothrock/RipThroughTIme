@@ -435,28 +435,12 @@ public class LevelRender {
 
 	    // Layered drawing effect:
 		// MovableEntities with higher Y values are drawn before those with lower Y values
-		drawablesCounter = 0;
-		while (drawablesCounter < drawables.size()) {
-			Gdx.app.log(RipGame.LOG, "drawables loop called.");
-			//Gdx.app.log(RipGame.LOG, "Drawables");
-			if (drawablesCounter>=1 && drawables.get(drawablesCounter-1).getX() > camPos && drawables.get(drawablesCounter-1).getX() < camPos + RipGame.WIDTH) {
-				MovableEntity me = drawables.get(drawablesCounter);
-				batch.draw(me.getTexture(), me.getX(), me.getY());
-				sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
-				drawablesCounter+=1;
-			} else if (drawablesCounter==0) {
-				MovableEntity me = drawables.get(drawablesCounter);
-				batch.draw(me.getTexture(), me.getX(), me.getY());
-				sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
-				drawablesCounter+=1;
-			} else {
-				drawablesCounter+=0;
-			}
+		for (int i=0; i < drawables.size(); i++) {
+			MovableEntity me = drawables.get(i);
+			batch.draw(me.getTexture(), me.getX(), me.getY());
+			sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
 		}
-		
-//		if (drawables.size() == 0) {
-//			drawablesCounter = 0;
-//		}
+	
 		
 		
 		
