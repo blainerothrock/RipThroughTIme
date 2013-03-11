@@ -65,15 +65,15 @@ public abstract class MovableEntity extends Entity {
 		this.SPEED = SPEED;
 		//this.createAnimations();
 		
-//		if (r.nextInt(4) < 3) {
-//			flank = false;
-//		} else {
+		if (r.nextInt(4) < 3) {
+			flank = false;
+		} else {
 			flank = true;
 			trackX = 0;
 			trackY = 0;
 			flankPoint1 = false;
 			flankPoint2 = false;
-//		}
+		}
 	}
 	
 	public void createAnimations() {

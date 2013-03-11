@@ -8,7 +8,6 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -17,8 +16,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.rip.RipGame;
 import com.rip.levels.Level_1_1;
 import com.rip.objects.Background;
@@ -73,12 +72,17 @@ public class LevelRender {
 	boolean cp3Wave1, cp3Wave2 = false;
 	boolean cp4Wave1, cp4Wave2 = false;
 	
+	int drawablesCounter = 0;
+	
 	Background bg;
 	Background fg;
 	
 	public float levelTime = 0;
 	public int levelScore = 0;
 	
+	Timer timer = new Timer();
+	Timer.Task enemySpawn;
+
 	float stateTime = 0f;
 	//float delta;
 	
@@ -431,13 +435,30 @@ public class LevelRender {
 
 	    // Layered drawing effect:
 		// MovableEntities with higher Y values are drawn before those with lower Y values
-		for (int i = 0; i < drawables.size(); i++) {
+		drawablesCounter = 0;
+		while (drawablesCounter < drawables.size()) {
+			Gdx.app.log(RipGame.LOG, "drawables loop called.");
 			//Gdx.app.log(RipGame.LOG, "Drawables");
-			MovableEntity me = drawables.get(i);
-			batch.draw(me.getTexture(), me.getX(), me.getY());
-			sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
-			//sr.rect(me.getX(), me.getY(), me.hitableBox.width, me.hitableBox.height);
-		}	
+			if (drawablesCounter>=1 && drawables.get(drawablesCounter-1).getX() > camPos && drawables.get(drawablesCounter-1).getX() < camPos + RipGame.WIDTH) {
+				MovableEntity me = drawables.get(drawablesCounter);
+				batch.draw(me.getTexture(), me.getX(), me.getY());
+				sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
+				drawablesCounter+=1;
+			} else if (drawablesCounter==0) {
+				MovableEntity me = drawables.get(drawablesCounter);
+				batch.draw(me.getTexture(), me.getX(), me.getY());
+				sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
+				drawablesCounter+=1;
+			} else {
+				drawablesCounter+=0;
+			}
+		}
+		
+//		if (drawables.size() == 0) {
+//			drawablesCounter = 0;
+//		}
+		
+		
 		
         //////////DRAW HUD//////////
 		
@@ -617,6 +638,7 @@ public class LevelRender {
 
 		drawables.clear();
 	}
+	
 	
 	public OrthographicCamera getCamera() {
 		return cam;
