@@ -1,9 +1,6 @@
 package com.rip.objects;
 
 
-//NOTE TO SELF
-// RIGHT NOW HITBOX IS TIDE TO TEXTURE AND NOT ANIMATION 
-//FIX IT!
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,15 +9,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.rip.RipGame;
 
 public class Player extends MovableEntity {
 
 	Texture punch;
 	float health;
-	float attack_damage;
+	float punch_damage;
+	float kick_damage;
 	float time;
 	boolean timeFreeze;
 	
@@ -93,8 +93,8 @@ public class Player extends MovableEntity {
 	//collision objects.
 //	public Intersector in = new Intersector();
 //	public Rectangle hitableBox = new Rectangle(this.getX() + this.getHeight() / 2,this.getY() + this.getWidth() / 2,this.getWidth() / 2,this.getHeight()/2);
-	public Rectangle punchBoxRight = new Rectangle(this.getX() + (this.width / 2), this.getY() + (this.height / 2), (this.width / 2), (this.height / 2));
-	public Rectangle punchBoxLeft =  new Rectangle(this.getX(), this.getY() + (this.height / 2), (this.width / 2), (this.height / 2));
+	public Rectangle punchBoxRight = new Rectangle(this.getX() + (this.width / 2), (this.getY() + (this.height / 2)), (this.width / 2), (this.height / 2) - 30);
+	public Rectangle punchBoxLeft =  new Rectangle(this.getX(), (this.getY() + (this.height / 2)), (this.width / 2), (this.height / 2) - 30);
 	
 	//public Rectangle punchBoxRight = new Rectangle(this.getX() + 60, this.getY() + (this.height / 2), 65, (this.height / 2));
 	//public Rectangle punchBoxLeft =  new Rectangle(this.getX() + 10, this.getY() + (this.height / 2), 50, (this.height / 2));
@@ -103,19 +103,19 @@ public class Player extends MovableEntity {
 	public Player(int x, int y, float width, float height, int SPEED, Texture text) {
 		super(x, y, width, height, SPEED, text);
 		this.health = 100;
-		this.attack_damage = 10;
-		this.time = 100;
-		timeFreeze = false;
+		this.punch_damage = 10;
+		this.kick_damage = 15;
 		CreateAnimations();
+
 	}
 	
 	public Player(int x, int y) {
 		super(x, y, 128, 163, 3, RIGHT);
 		this.health = 100;
-		this.attack_damage = 10;
-		this.time = 100;
-		timeFreeze = false;
+		this.punch_damage = 10;
+		this.kick_damage = 15;
 		CreateAnimations();
+		
 	}
 	
 	public void CreateAnimations() {
@@ -204,8 +204,8 @@ public class Player extends MovableEntity {
 				index++;
 			}
 		}
-		punchAnimationRight = new Animation(0.07f, punchFramesRight);
-		punchAnimationLeft = new Animation(0.07f, punchFramesLeft);
+		punchAnimationRight = new Animation(0.05f, punchFramesRight);
+		punchAnimationLeft = new Animation(0.05f, punchFramesLeft);
 		
 		
 		//Set player_animation
@@ -225,19 +225,19 @@ public class Player extends MovableEntity {
 	public void setHealth(float health) {
 		this.health = health;
 	}
-	
-	public float getTime() {
-		return time;
-	}
-	
-	public void setTime(float time) {
-		this.time = time;
-	}
-	
+
 	public boolean getTimeFreeze() {
 		return timeFreeze;
 	}
 	
+	public float getTime() {
+		return time;
+	}
+
+	public void setTime(float time) {
+		this.time = time;
+	}
+
 	public void flipTimeFreeze() {
 		if (timeFreeze == false) {
 			timeFreeze = true;
@@ -247,17 +247,21 @@ public class Player extends MovableEntity {
 	}
 
 
-
-	public float getAttack_damage() {
-		return attack_damage;
+	public float getPunch_damage() {
+		return punch_damage;
 	}
 
-
-
-	public void setAttack_damage(float attack_damage) {
-		this.attack_damage = attack_damage;
+	public void setPunch_damage(float punch_damage) {
+		this.punch_damage = punch_damage;
 	}
 
+	public float getKick_damage() {
+		return kick_damage;
+	}
+
+	public void setKick_damage(float kick_damage) {
+		this.kick_damage = kick_damage;
+	}
 
 	public Texture getPunch() {
 		return punch;
@@ -307,8 +311,14 @@ public class Player extends MovableEntity {
 	}
 	
 	public boolean punches(Rectangle attacker) {
-		return this.punchBoxLeft.overlaps(attacker) ||
-				this.punchBoxRight.overlaps(attacker);
+		switch (this.getDir()) {
+			case DIR_LEFT:
+				return this.punchBoxLeft.overlaps(attacker);
+			case DIR_RIGHT:
+				return this.punchBoxRight.overlaps(attacker);
+			default:
+				return false;
+		}
 	}
 	
 	
@@ -323,6 +333,7 @@ public class Player extends MovableEntity {
 			
 			if (Intersector.overlapRectangles(this.hitableBox, m.hitableBox)) {
 			//if (this.hitableBox.overlaps(m.hitableBox)) {
+				m.setCollides_player(true);
 				//Is Left occupied?
 				if ((this.hitableBox.x <= (m.hitableBox.x + m.hitableBox.width)) && (this.hitableBox.x >= m.hitableBox.x)) {
 					c[2] = true;
@@ -339,6 +350,8 @@ public class Player extends MovableEntity {
 				if (((this.hitableBox.y + this.hitableBox.height) >= m.hitableBox.y) && (m.hitableBox.y >= this.hitableBox.y)){
 					c[0] = true;
 				}
+			} else {
+				m.setCollides_player(false);
 			}
 			
 		}
@@ -368,7 +381,7 @@ public class Player extends MovableEntity {
 	public void setX(int x) {
 		this.x = x;
 		this.bounds.x = x;
-		this.hitableBox.x = x;
+		this.hitableBox.x = x + this.getBoxset();
 		this.punchBoxRight.x = x + (width / 2);
 		this.punchBoxLeft.x = x; //+ 10; 
 		
@@ -403,15 +416,15 @@ public class Player extends MovableEntity {
 
 	public void setCurrentFrame(float delta) {
 		this.stateTime += delta;
-		this.currentFrame = player_animation.getKeyFrame(stateTime, true);
-		/*
+		//this.currentFrame = player_animation.getKeyFrame(stateTime, true);
+		
 		if (player_animation == this.kickAnimationLeft || player_animation == this.kickAnimationRight
 			|| player_animation == this.punchAnimationLeft || player_animation == this.punchAnimationRight) {
 			this.currentFrame = player_animation.getKeyFrame(stateTime, false);
 		} else {
 			this.currentFrame = player_animation.getKeyFrame(stateTime, true);
 		}
-		*/
+		
 	}
 
 	public void setCurrentFrame(TextureRegion currentFrame) {

@@ -12,14 +12,18 @@ public abstract class Entity {
 	Texture texture;
 	public Rectangle hitableBox;
 	
+	protected float boxset;
+	
 	public Entity(int x, int y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		boxset = (this.width * 0.15f);
 		this.bounds = new Rectangle(this.x, this.y, width, height);
-		
-		hitableBox = new Rectangle(this.x, this.y + (height/2), width, (height/2));
+		// HitableBox represents 70% of width of the Entity
+		hitableBox = new Rectangle(this.x + boxset, 
+					this.y + (height/2), (width * 0.7f), (height / 2));
 		
 	}
 	
@@ -30,8 +34,11 @@ public abstract class Entity {
 		this.height = height;
 		this.bounds = new Rectangle(this.x, this.y, width, height);
 		this.texture = texture;
-		
-		hitableBox = new Rectangle(this.x, this.y + (height/2), width, (height / 2));
+		boxset = (this.width * 0.15f);
+		// HitableBox represents 70% of width of the Entity
+		//hitableBox = new Rectangle(this.x, this.y + (height/2), (width * 0.7f), ((height/2) * 0.7f));
+		hitableBox = new Rectangle(this.x + boxset, 
+				this.y + (height/2), (width * 0.7f), (height / 2));
 		
 	}
 	
@@ -60,7 +67,7 @@ public abstract class Entity {
 	public void setX(int x) {
 		this.x = x;
 		this.bounds.x = x;
-		this.hitableBox.x = x;
+		this.hitableBox.x = x + boxset;
 		
 	}
 
@@ -76,6 +83,14 @@ public abstract class Entity {
 		this.y = y;
 		this.bounds.y = y;
 		this.hitableBox.y = y + (height / 2);
+	}
+	
+	public int getMiddleX() {
+		return (int)(getX() + (getWidth() / 2));
+	}
+	
+	public int getMiddleY() {
+		return (int)(getY() + (getHeight() / 2));
 	}
 
 
@@ -103,6 +118,15 @@ public abstract class Entity {
 	public void setBounds(Rectangle bounds) {
 		this.bounds = bounds;
 	}
+
+	public float getBoxset() {
+		return boxset;
+	}
+
+	public void setBoxset(float boxset) {
+		this.boxset = boxset;
+	}
+	
 	
 	
 }

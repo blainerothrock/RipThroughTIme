@@ -16,10 +16,11 @@ import com.rip.objects.Raptor;
 
 public class Level_1_1 {
 	
-	RipGame game;
+	public RipGame game;
 	Player player;
 	LevelRender lr;
 	ArrayList<Enemy> enemies;
+	private InputHandler in;
 		
 	Music leveltheme;
 	
@@ -27,7 +28,8 @@ public class Level_1_1 {
 			this.game = game;
 			enemies = new ArrayList<Enemy>();
 			this.player = new Player(250, 158);
-			Gdx.input.setInputProcessor(new InputHandler(this));
+			setIn(new InputHandler(this));
+			Gdx.input.setInputProcessor(getIn());
 			/*
 			Raptor raptor_one = new Raptor(800, 50);
 			Raptor raptor_two = new Raptor(500, 150);
@@ -48,14 +50,10 @@ public class Level_1_1 {
 			lr = r.nextBoolean();
 			if (lr) {
 				rightside = LevelRender.camPos + RipGame.WIDTH;
-				Raptor raptor = new Raptor(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 400)) + (rightside + 400), r.nextInt(LevelRender.Y_LIMIT));
-				raptor.flipDir();
-				raptor.spawnPoint = true;
-				enemies.add(raptor);
-				
+				enemies.add(new Raptor(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRender.Y_LIMIT)));
 			} else {
 				leftside = LevelRender.camPos;
-				enemies.add(new Raptor(r.nextInt((leftside - 400) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
+				enemies.add(new Raptor(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
 			}
 
 		}
@@ -64,12 +62,10 @@ public class Level_1_1 {
 			lr = r.nextBoolean();
 			if (lr) {
 				rightside = LevelRender.camPos + RipGame.WIDTH;
-				Ape ape = new Ape(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 400)) + (rightside + 400), r.nextInt(LevelRender.Y_LIMIT));
-				ape.spawnPoint = true;
-				enemies.add(ape);
+				enemies.add(new Ape(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRender.Y_LIMIT)));
 			} else {
 				leftside = LevelRender.camPos;
-				enemies.add(new Ape(r.nextInt((leftside - 400) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
+				enemies.add(new Ape(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
 			}
 
 		}
@@ -109,6 +105,14 @@ public class Level_1_1 {
 
 	public Music getLeveltheme() {
 		return leveltheme;
+	}
+
+	public InputHandler getIn() {
+		return in;
+	}
+
+	public void setIn(InputHandler in) {
+		this.in = in;
 	}
 
 	

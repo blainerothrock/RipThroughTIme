@@ -12,8 +12,8 @@ public abstract class LowLevelEnemy extends Enemy {
 	public LowLevelEnemy(int x, int y, float width, float height, int SPEED) {
 		super(x, y, width, height, SPEED, 20);
 		
-		this.health = 30;
-		this.damage = 5;
+		this.health = 35;
+		this.damage = 10;
 	}
 
 }
