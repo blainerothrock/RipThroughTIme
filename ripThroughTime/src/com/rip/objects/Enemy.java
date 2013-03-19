@@ -70,6 +70,7 @@ public abstract class Enemy extends MovableEntity {
 		
 		dx = p.getMiddleX() - this.getMiddleX();
 		dy = p.getMiddleY() - this.getMiddleY();
+		
 //		Gdx.app.log(RipGame.LOG, "flank: " + flank);
 		
 		if (flank == false) {
@@ -154,6 +155,14 @@ public abstract class Enemy extends MovableEntity {
 	*/
 	
 	
+	
+	public int getDx(Player p) {
+		return Math.abs(p.getMiddleX() - this.getMiddleX());
+	}
+	
+	public int getDy(Player p) {
+		return Math.abs(p.getMiddleY() - this.getMiddleY());
+	}
 	
 	
 	

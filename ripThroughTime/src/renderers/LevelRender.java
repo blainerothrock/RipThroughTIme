@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.rip.RipGame;
 import com.rip.levels.Level_1_1;
 import com.rip.objects.Background;
@@ -83,6 +84,9 @@ public class LevelRender {
 	
 	public float levelTime = 0;
 	public int levelScore = 0;
+	
+	public float generationTime = 0;
+	public int generationCounter = 0;
 	
 	float stateTime = 0f;
 	//float delta;
@@ -394,6 +398,29 @@ public class LevelRender {
 
 	    // Layered drawing effect:
 		// MovableEntities with higher Y values are drawn before those with lower Y values
+		
+//		if (generationCounter < drawables.size()) {
+//			if (generationTime <= 1) {
+//				generationTime = 0;
+//				MovableEntity me = drawables.get(generationCounter);
+//				if ((me instanceof Player) && player.getTimeFreeze() == false){
+//					batch.draw(me.getCurrentFrame(), me.getX(), me.getY());
+//				} else if (me instanceof Raptor){
+//					batch.draw(me.getCurrentFrame(), me.getX(), me.getY());
+//					((Raptor) me).setCurrentFrame(delta);
+//				} else {
+//					batch.draw(me.getTexture(), me.getX(), me.getY());
+//				}
+//				//sr.rect(me.hitableBox.x, me.hitableBox.y, me.hitableBox.width, me.hitableBox.height);
+//				//sr.rect(me.getX(), me.getY(), me.hitableBox.width, me.hitableBox.height);
+//				generationCounter += 1;
+//			} else {
+//				generationTime += delta;
+//			}
+//		} else {
+//			generationCounter = 0; 
+//		}
+		
 		for (int i = 0; i < drawables.size(); i++) {
 			//Gdx.app.log(RipGame.LOG, "Drawables");
 			MovableEntity me = drawables.get(i);
@@ -492,6 +519,23 @@ public class LevelRender {
 				disX = (int)((e.getWidth()/2) + (player.getWidth()/2) - 30);
 				disY = (int)((e.getHeight()/2) + (player.getHeight()/2) - 30);
 				if (dx > disX || dy > disY) {
+//					if (drawables.size() > 2) {
+//						for (int j = 0; j < drawables.size(); j++) {
+//							if (drawables.get(j) instanceof Player) {
+//								continue;
+//							}
+//							Enemy eE = (Enemy)drawables.get(j);
+//							if (eE == e) {
+//								continue;
+//							} else if (eE.getBounds().contains(e.getBounds())) {
+//								continue;
+//							} else {
+//								e.track(player);
+//							}
+//						}
+//					} else {
+//						e.track(player);
+//					}
 					e.track(player);
 				} else {
 					///e.attack();
