@@ -1,0 +1,56 @@
+package renderers;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.rip.RipGame;
+import com.rip.levels.Level;
+import com.rip.objects.Enemy;
+import com.rip.objects.MovableEntity;
+import com.rip.objects.Player;
+
+public class LevelRenderer {
+	Level level;
+	SpriteBatch batch;
+	Music leveltheme;
+	RipGame game;
+	ShapeRenderer sr;
+	Player player;
+	int width, height;
+	public final static int Y_LIMIT = 180;
+	public float levelTime = 0;
+	public int levelScore = 0;
+	public OrthographicCamera cam;
+	public static int camPos = 0;
+	public static float delta;
+	public ArrayList<Enemy> enemy_list;
+	public ArrayList<MovableEntity> drawables;
+	public Random r = new Random();
+	float stateTime = 0f;
+	public boolean move = true;
+	
+	public LevelRenderer1_2(Level level) {
+		this.level = level;
+		level.setRenderer(this);
+		
+		width = 960;
+		height = 480;
+		
+		cam = new OrthographicCamera();
+		cam.setToOrtho(false, width, height);
+		
+		batch = new SpriteBatch();
+		
+		sr = new ShapeRenderer();
+		
+		drawables = new ArrayList<MovableEntity>();
+		
+		///Generate background objects///
+		level.generateBackground();
+	}
+
+}

@@ -5,15 +5,20 @@ package com.rip.objects;
 import java.util.ArrayList;
 import java.util.Random;
 
+import renderers.LevelRenderer;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.rip.RipGame;
+import com.rip.levels.Level;
+import com.rip.levels.Level_1_2;
+import com.rip.screens.MainMenu;
 
 public class Player extends MovableEntity {
 
@@ -496,6 +501,132 @@ public class Player extends MovableEntity {
 
 	public void setATTACK_ANIMATION(boolean aTTACK_ANIMATION) {
 		ATTACK_ANIMATION = aTTACK_ANIMATION;
+	}
+	
+	public void handleMovement(LevelRenderer lr, Level level, RipGame game) {
+		boolean[] c = collides(lr.enemy_list);
+		//Gdx.app.log(RipGame.LOG, c.toString());
+		
+		if (lr.camPos > level.levelLength - 100) {
+			if (Gdx.input.isKeyPressed(Keys.ENTER)){
+				game.setScreen(new MainMenu(game));
+			}
+		}
+		
+		if (isATTACK_ANIMATION()) {
+			setCurrentFrame(lr.delta);
+			level.getIn().setWAIT(true);
+			if (getPlayer_animation().isAnimationFinished(getStateTime())) {
+				for (int i = 0; i < lr.enemy_list.size(); i++) {
+					Enemy e = lr.enemy_list.get(i);
+						if (e.getHealth() <= 0)	{
+							lr.enemy_list.remove(i);
+							lr.drawables.remove(e);
+						}
+				}
+				setATTACK_ANIMATION(false);
+				level.getIn().setWAIT(false);
+				switch(getDir()){
+					case DIR_LEFT:
+						setPlayer_animation(getWalkAnimationLeft());
+						setStateTime(0f);
+						setCurrentFrame(0f);
+						break;
+					case DIR_RIGHT:
+						setPlayer_animation(getWalkAnimationRight());
+						setStateTime(0f);
+						setCurrentFrame(0f);
+						break;
+				}
+					
+				Gdx.app.log(RipGame.LOG, "ANIMATION OVER");
+			}
+		}
+		
+		else if(Gdx.input.isKeyPressed(Keys.A) && !c[2] && (getDir() == Directions.DIR_LEFT)) {
+			
+			if (getX() > lr.camPos) {
+				setX((getX() - getSPEED()));
+				setCurrentFrame(lr.delta);
+			}
+		
+		}
+		
+		else if(Gdx.input.isKeyPressed(Keys.D) && !c[3] && (getDir() == Directions.DIR_RIGHT)) { 
+			
+			if (getX() + getWidth() < lr.camPos + RipGame.WIDTH) {
+				setX((getX() + getSPEED()));
+				setCurrentFrame(lr.delta);
+			}
+			
+			if (lr.move && (getX()) - lr.camPos > 450) {
+				//moves camera along level. 
+					lr.cam.translate(3, 0);
+					lr.camPos += 3;
+
+					//background parallax
+					level.parallax();
+				}
+			
+		}
+		else if(Gdx.input.isKeyPressed(Keys.W) && !c[0]) {
+			if (getY() >= lr.Y_LIMIT) {
+				setY(getY());
+				
+			} else {
+				setY(getY() + 2);
+			}
+			setCurrentFrame(lr.delta);
+		}
+		else if(Gdx.input.isKeyPressed(Keys.S) && !c[1]) { 
+			if (getY() <= 0) {
+				setY(getY());
+			} else {
+				setY(getY() - 2);
+			}
+			setCurrentFrame(lr.delta);
+		}
+	}
+	
+	public void handleTime(LevelRenderer lr, Level level, RipGame game) {
+		if (getTime() <= 100) {
+			setTime(getTime() + (2 * lr.delta));
+		} else if (getTime() > 100) {
+			setTime(100f);
+		}
+
+		if (getTimeFreeze() == true && getTime() <= 0) {
+			flipTimeFreeze();
+		}
+
+		if (getTimeFreeze() == true && getTime() > 0) {
+			setTime(getTime() - (25 * lr.delta));
+		} else if (Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyPressed(Keys.A) && getTime() > 0 && getX() > lr.camPos && getTimeFreeze() == false) {
+			setTime(getTime() - (100 * lr.delta));
+			setX(getX() - 20);
+		} else if (Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyPressed(Keys.D) && getTime() > 0 && getX() < lr.camPos + RipGame.WIDTH - getWidth() && getTimeFreeze() == false) {
+			setTime(getTime() - (100 * lr.delta));
+			setX(getX() + 20);
+		} else {
+			for (int i = 0; i < lr.drawables.size(); i++) {
+				int dx, dy, disX, disY;
+				MovableEntity me = lr.drawables.get(i);
+				if (me instanceof Player) {
+					continue;
+				}
+				Enemy e = (Enemy) me;
+				dx = Math.abs(getMiddleX() - e.getMiddleX());
+				dy = Math.abs(getMiddleY() - e.getMiddleY());
+				disX = (int)((e.getWidth()/2) + (getWidth()/2) - 30);
+				disY = (int)((e.getHeight()/2) + (getHeight()/2) - 30);
+				if (dx > disX || dy > disY) {
+					e.track(this);
+				} else {
+					///e.attack();
+				}
+			}
+		}
+		
 	}
 
 

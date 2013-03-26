@@ -1,0 +1,93 @@
+package renderers;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.rip.RipGame;
+import com.rip.levels.Level_1_2;
+import com.rip.objects.Enemy;
+import com.rip.objects.MovableEntity;
+import com.rip.objects.Player;
+
+public class LevelRenderer1_2 {
+	//////////UNIVERSAL VARIABLES//////////
+	Level_1_2 level;
+	SpriteBatch batch;
+	Music leveltheme;
+	RipGame game;
+	ShapeRenderer sr;
+	Player player;
+	int width, height;
+	public final static int Y_LIMIT = 180;
+	public float levelTime = 0;
+	public int levelScore = 0;
+	OrthographicCamera cam;
+	public static int camPos = 0;
+	public static float delta;
+	ArrayList<Enemy> enemy_list;
+	ArrayList<MovableEntity> drawables;
+	public Random r = new Random();
+	float stateTime = 0f;
+	boolean move = true;
+	
+	//////////UNIVERSAL TEXTURES//////////
+	Texture playerTexture;
+	Texture timeFreezeOverlay = new Texture(Gdx.files.internal("data/timeFreezeOverlay.png"));
+	Texture level_complete = new Texture(Gdx.files.internal("data/level_complete.png"));
+	Texture timebaroutline = new Texture(Gdx.files.internal("data/timebaroutline.png"));
+	Texture timebar = new Texture(Gdx.files.internal("data/timebar.png"));
+	Texture healthbaroutline = new Texture(Gdx.files.internal("data/healthbaroutline.png"));
+	Texture healthbar = new Texture(Gdx.files.internal("data/healthbar.png"));
+	Texture pauseOverlay = new Texture(Gdx.files.internal("data/pauseOverlay.png"));
+	Texture timeFreezeLine = new Texture(Gdx.files.internal("data/timeLine.png"));
+	
+	BitmapFont font = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack18.fnt"),false);
+	BitmapFont fontBig = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack32.fnt"),false);
+	
+	public LevelRenderer1_2(Level_1_2 level) {
+		this.level = level;
+		level.setRenderer(this);
+		
+		width = 960;
+		height = 480;
+		
+		cam = new OrthographicCamera();
+		cam.setToOrtho(false, width, height);
+		
+		batch = new SpriteBatch();
+		
+		sr = new ShapeRenderer();
+		
+		drawables = new ArrayList<MovableEntity>();
+		
+		///Generate background objects///
+		level.generateBackground();
+	}
+	
+	public void render() {
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		delta = Gdx.graphics.getDeltaTime();
+		stateTime += delta;
+		
+		player = level.getPlayer();
+		enemy_list = level.getEnemies();
+		drawables.add(player);
+		drawables.addAll(enemy_list);
+		
+		cam.update();
+		
+		batch.setProjectionMatrix(cam.combined);
+		sr.setProjectionMatrix(cam.combined);
+	}
+
+}

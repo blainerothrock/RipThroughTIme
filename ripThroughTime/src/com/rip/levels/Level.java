@@ -1,22 +1,48 @@
 package com.rip.levels;
 
-import renderers.LevelRender;
+import java.util.ArrayList;
+import java.util.Random;
 
-//import com.badlogic.gdx.Gdx;
+import renderers.LevelRenderer;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.rip.RipGame;
+import com.rip.objects.Enemy;
 import com.rip.objects.Player;
+//import com.badlogic.gdx.Gdx;
 
 public abstract class Level {
 
 	
-	RipGame game;
+	public RipGame game;
 	Player player;
-	LevelRender lr;
+	LevelRenderer lr;
+	ArrayList<Enemy> enemies;
+	private InputHandler in;
+	public int levelLength;
+	
+	Random r = new Random();
 		
-	public Level(RipGame game, Player player) {
+	public Level(RipGame game) {
 			this.game = game;
-			this.player = player;
-//			Gdx.input.setInputProcessor(new InputHandler(this));
+			enemies = new ArrayList<Enemy>();
+			this.player = new Player(250, 158);
+			setIn(new InputHandler(this));
+			Gdx.input.setInputProcessor(getIn());
+	}
+	
+	
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+	
+	public void setRenderer(LevelRenderer lr) {
+		this.lr = lr;
 	}
 		
 	public Player getPlayer(){
@@ -27,17 +53,34 @@ public abstract class Level {
 		player.update();
 	}
 
-	public void setRenderer(LevelRender lr) {
-		this.lr = lr;
+//	public Music getLeveltheme() {
+//		return leveltheme;
+//	}
+
+	public InputHandler getIn() {
+		return in;
 	}
-	
-	public LevelRender getRenderer() {
-		return lr;
+
+	public void setIn(InputHandler in) {
+		this.in = in;
 	}
+
 	
 	public void dispose() {
 		
-	}	
+	}
+	
+	public void generateBackground() {
+		
+	}
+	
+	public void drawBackground(SpriteBatch batch) {
+		
+	}
+	
+	public void parallax() {
+		
+	}
 	
 }
 	

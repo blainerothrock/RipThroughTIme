@@ -3,7 +3,6 @@ package com.rip.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -101,7 +100,7 @@ public class MainMenu implements Screen {
 				maintheme.stop();
 				selectPlay.play();
 				
-				game.setScreen(new GameScreen(game));
+				game.setScreen(new LevelSelect(game));
 			}
 		});
 		

@@ -1,0 +1,177 @@
+package com.rip.levels;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import renderers.LevelRenderer1_2;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
+import com.rip.RipGame;
+import com.rip.objects.BackgroundObject;
+import com.rip.objects.Enemy;
+import com.rip.objects.Player;
+
+public class Level_1_2 extends Level {
+	
+	public RipGame game;
+	Player player;
+	LevelRenderer1_2 lr;
+	ArrayList<Enemy> enemies;
+	private InputHandler in;
+	
+	Random r = new Random();
+	
+	public int levelLength = 1400;
+	
+	
+	Array<BackgroundObject> bgBack = new Array<BackgroundObject>(100);
+	Array<BackgroundObject> bgFront = new Array<BackgroundObject>(100);
+	Array<BackgroundObject> bgMiddle = new Array<BackgroundObject>(100);
+	Array<BackgroundObject> fg = new Array<BackgroundObject>(100);
+	Array<BackgroundObject> rocks = new Array<BackgroundObject>(100);
+	
+	
+	public Level_1_2(RipGame game) {
+		super(game);
+		enemies = new ArrayList<Enemy>();
+		this.player = new Player(250, 158);
+		setIn(new InputHandler(this));
+		Gdx.input.setInputProcessor(getIn());
+	}
+	
+	@Override
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+
+
+	public Player getPlayer(){
+		return player;
+	}
+	
+	public void update() {
+		player.update();
+	}
+
+	public void setRenderer(LevelRenderer1_2 lr) {
+		this.lr = lr;
+	}
+	
+//	public LevelRenderer1_2 getRenderer() {
+//		return lr;
+//	}
+	
+	public void dispose() {
+		
+	}
+
+
+//	public Music getLeveltheme() {
+//		return leveltheme;
+//	}
+
+	public InputHandler getIn() {
+		return in;
+	}
+
+	public void setIn(InputHandler in) {
+		this.in = in;
+	}
+
+	public void generateBackground() {
+		//////////background textures//////////
+	
+		//furthest back background
+		Pixmap bgBack1 = new Pixmap(Gdx.files.internal("level1_2/back1.png"));
+		Pixmap bgBack2 = new Pixmap(Gdx.files.internal("level1_2/back2.png"));
+		Pixmap bgBack3 = new Pixmap(Gdx.files.internal("level1_2/back3.png"));
+		Pixmap bgBack4 = new Pixmap(Gdx.files.internal("level1_2/back4.png"));
+		Array<Pixmap> bgBackPix = new Array<Pixmap>();
+		bgBackPix.add(bgBack1);
+		bgBackPix.add(bgBack2);
+		bgBackPix.add(bgBack3);
+		bgBackPix.add(bgBack4);
+		int ranPos = -100;
+		while (ranPos < levelLength * (1-(.5/3))) {
+			int randomX = r.nextInt(150-100) + 100;
+			int randomY = 420;
+			ranPos = ranPos + randomX;
+			BackgroundObject bgB = new BackgroundObject(bgBackPix, ranPos, randomY);
+			bgB.setTexture();
+			bgBack.add(bgB);
+		}
+		
+		//middle background
+		Pixmap bgMiddle1 = new Pixmap(Gdx.files.internal("level1_2/iddle1.png"));
+		Pixmap bgMiddle2 = new Pixmap(Gdx.files.internal("level1_2/middle2.png"));
+		Pixmap bgMiddle3 = new Pixmap(Gdx.files.internal("level1_2/middle3.png"));
+		Pixmap bgMiddle4 = new Pixmap(Gdx.files.internal("level1_2/middle4.png"));
+		Array<Pixmap> bgMiddlePix = new Array<Pixmap>();
+		bgMiddlePix.add(bgMiddle1);
+		bgMiddlePix.add(bgMiddle2);
+		bgMiddlePix.add(bgMiddle3);
+		bgMiddlePix.add(bgMiddle4);
+		ranPos = -100;
+		while (ranPos < levelLength * (1-(.5/3))) {
+			int randomX = 0;
+			int randomY = 400;
+			ranPos = ranPos + randomX;
+			BackgroundObject bgM = new BackgroundObject(bgMiddlePix, ranPos, randomY);
+			bgM.setTexture();
+			bgBack.add(bgM);
+		}
+		
+		///closest back background object
+		Pixmap bgFront1 = new Pixmap(Gdx.files.internal("level1_2/front1.png"));
+		Pixmap bgFront2 = new Pixmap(Gdx.files.internal("level1_2/front2.png"));
+		Pixmap bgFront3 = new Pixmap(Gdx.files.internal("level1_2/front3.png"));
+		Pixmap bgFront4 = new Pixmap(Gdx.files.internal("level1_2/front4.png"));
+		Array<Pixmap> bgFrontPix = new Array<Pixmap>();
+		bgFrontPix.add(bgFront1);
+		bgFrontPix.add(bgFront2);
+		bgFrontPix.add(bgFront3);
+		bgFrontPix.add(bgFront4);
+		ranPos = -100;
+		while (ranPos < levelLength * (1-(.5/3))) {
+			int randomX = 0;
+			int randomY = 380;
+			ranPos = ranPos + randomX;
+			BackgroundObject bgF = new BackgroundObject(bgFrontPix, ranPos, randomY);
+			bgF.setTexture();
+			bgBack.add(bgF);
+		}
+		
+	}
+
+	public void drawBackground(SpriteBatch batch) {
+		for (BackgroundObject i : bgBack) {
+			if (i.getX() > LevelRenderer1_2.camPos - 250 && i.getX() < LevelRenderer1_2.camPos + RipGame.WIDTH + 20) {
+				batch.draw(i.getTexture(), i.getX(), i.getY());
+			}
+		}
+		
+		for (BackgroundObject i : bgMiddle) {
+			if (i.getX() > LevelRenderer1_2.camPos - 250 && i.getX() < LevelRenderer1_2.camPos + RipGame.WIDTH + 20) {
+				batch.draw(i.getTexture(), i.getX(), i.getY());
+			}
+		}
+		
+		for (BackgroundObject i : bgFront) {
+			if (i.getX() > LevelRenderer1_2.camPos - 250 && i.getX() < LevelRenderer1_2.camPos + RipGame.WIDTH + 20) {
+				batch.draw(i.getTexture(), i.getX(), i.getY());
+			}
+		}
+	}
+	
+	
+}
+

@@ -2,4 +2,8 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.badlogic.gdx.utils.Timer"/>
 <fullyQualifiedTypeName name="com.badlogic.gdx.utils.Timer.Task"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.Screen"/>
+<fullyQualifiedTypeName name="com.rip.RipGame"/>
+<fullyQualifiedTypeName name="com.rip.levels.Level_1_2"/>
+<fullyQualifiedTypeName name="com.rip.levels.Level"/>
 </qualifiedTypeNameHistroy>

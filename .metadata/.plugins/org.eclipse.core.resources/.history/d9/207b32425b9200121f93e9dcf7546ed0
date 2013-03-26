@@ -1,0 +1,11 @@
+package com.rip.levels;
+
+//import com.badlogic.gdx.Gdx;
+
+public abstract class Level {
+
+	
+	
+}
+	
+

@@ -1,0 +1,56 @@
+package com.rip.levels;
+
+import java.util.ArrayList;
+
+import renderers.LevelRenderer1_1;
+
+//import com.badlogic.gdx.Gdx;
+import com.rip.RipGame;
+import com.rip.objects.Enemy;
+import com.rip.objects.Player;
+
+public abstract class Level {
+
+	
+	RipGame game;
+	Player player;
+	LevelRenderer1_1 lr;
+	public int levelLength;
+		
+	public Level(RipGame game) {
+			this.game = game;
+//			Gdx.input.setInputProcessor(new InputHandler(this));
+	}
+		
+	public Player getPlayer(){
+		return player;
+	}
+	
+	public void update() {
+		player.update();
+	}
+
+	public void setRenderer(LevelRenderer1_1 lr) {
+		this.lr = lr;
+	}
+	
+	public LevelRenderer1_1 getRenderer() {
+		return lr;
+	}
+	
+	public void dispose() {
+		
+	}
+
+	public ArrayList<Enemy> getEnemies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public void generateBackground() {
+		
+	}
+	
+}
+	
+

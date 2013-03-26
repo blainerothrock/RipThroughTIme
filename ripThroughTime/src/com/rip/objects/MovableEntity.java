@@ -1,6 +1,6 @@
 package com.rip.objects;
 
-import renderers.LevelRender;
+import renderers.LevelRenderer1_1;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;

@@ -13,7 +13,7 @@ import com.rip.objects.Player;
 
 
 public class InputHandler implements InputProcessor {
-	Level_1_1 level;
+	Level level;
 	Player player;
 	ArrayList<Enemy> enemies;
 	
@@ -22,7 +22,7 @@ public class InputHandler implements InputProcessor {
 	int newX;
 	int newY;
 	
-	public InputHandler(Level_1_1 level) {
+	public InputHandler(Level level) {
 		this.level = level;
 	}
 	

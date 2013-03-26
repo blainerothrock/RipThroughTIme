@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.rip.RipGame;
 import com.rip.objects.MovableEntity.Directions;
 
-import renderers.LevelRender;
+import renderers.LevelRenderer1_1;
 
 public abstract class Enemy extends MovableEntity {
 
@@ -82,8 +82,8 @@ public abstract class Enemy extends MovableEntity {
 			
 			if (pY > 180) { pY = 180; }
 
-			this.setX(this.getX() + (int)((dx - this.SPEED) * LevelRender.delta));
-			this.setY(this.getY() + (int)((dy - this.SPEED) * LevelRender.delta));
+			this.setX(this.getX() + (int)((dx - this.SPEED) * LevelRenderer1_1.delta));
+			this.setY(this.getY() + (int)((dy - this.SPEED) * LevelRenderer1_1.delta));
 			
 			
 		} else {
@@ -97,8 +97,8 @@ public abstract class Enemy extends MovableEntity {
 			} else if (flankPoint1 == false) {
 				dx = trackX - this.getMiddleX();
 				dy = trackY - this.getMiddleY();
-				this.setX(this.getX() + (int)((dx - this.SPEED + 2) * LevelRender.delta));
-				this.setY(this.getY() + (int)((dy - this.SPEED + 2) * LevelRender.delta));
+				this.setX(this.getX() + (int)((dx - this.SPEED + 2) * LevelRenderer1_1.delta));
+				this.setY(this.getY() + (int)((dy - this.SPEED + 2) * LevelRenderer1_1.delta));
 				if (this.getMiddleX() <= trackX + this.width + 10 && this.getMiddleX() >= trackX - this.width + 10 && this.getMiddleY() <= trackY + this.height + 10 && this.getMiddleY() >= trackY - this.height + 10 ) {
 					flankPoint1 = true;
 					Gdx.app.log(RipGame.LOG, "flankPoin1 = " + flankPoint1);
@@ -113,8 +113,8 @@ public abstract class Enemy extends MovableEntity {
 			} else if (flankPoint2 == false) {
 				dx = trackX - this.getMiddleX();
 				dy = trackY - this.getMiddleY();
-				setX(getX() + (int)((dx - SPEED + 2) * LevelRender.delta));
-				setY(getY() + (int)((dy - SPEED + 2) * LevelRender.delta));
+				setX(getX() + (int)((dx - SPEED + 2) * LevelRenderer1_1.delta));
+				setY(getY() + (int)((dy - SPEED + 2) * LevelRenderer1_1.delta));
 				if (this.getMiddleX() <= trackX + this.width + 10 && this.getMiddleX() >= trackX - this.width + 10 && this.getMiddleY() <= trackY + this.height + 10 && this.getMiddleY() >= trackY - this.height + 10 ) {
 					flankPoint2 = true;
 					trackY = p.getY();
