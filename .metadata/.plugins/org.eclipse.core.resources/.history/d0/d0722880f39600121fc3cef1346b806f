@@ -66,6 +66,55 @@ public class Level_1_1 extends Level {
 			levelHudColor = "black";
 	}
 	
+	public void spawnApe(int num) {
+		int buffer = 200;
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+		
+		for (int i = 0; i < num; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				Ape ape = new Ape(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				ape.spawnPoint = true;
+				LevelRenderer.enemy_list.add(ape);
+				buffer += 200;
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new Ape(LevelRenderer.camPos - buffer, r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+	}
+	
+	public void spawnRaptor(int num) {
+		int buffer = 200;
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+
+		for (int i = 0; i < num; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				Raptor raptor = new Raptor(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				raptor.spawnPoint = true;
+				LevelRenderer.enemy_list.add(raptor);
+				buffer += 200;
+				
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new Raptor(LevelRenderer.camPos - buffer , r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+	}
+	
 	@Override
 	public void handleCheckPoints(LevelRenderer lr) {
 		if (getEnemies().isEmpty() && LevelRenderer.move == false && LevelRenderer.camPos < 11500) {
