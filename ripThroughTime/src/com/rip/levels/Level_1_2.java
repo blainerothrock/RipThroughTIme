@@ -37,6 +37,8 @@ public class Level_1_2 extends Level {
 	public Level_1_2(RipGame game) {
 		super(game);
 		levelLength = 14000;
+		levelName = "Level 1   4";
+		levelHudColor = "white";
 	}
 	
 //	public LevelRenderer1_2 getRenderer() {

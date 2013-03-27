@@ -1,6 +1,5 @@
 package com.rip.screens;
 
-import renderers.LevelRenderer1_1;
 import renderers.LevelRenderer;
 
 import com.badlogic.gdx.Screen;
@@ -16,19 +15,17 @@ public class GameScreen implements Screen {
 	Level_1_1 level1_1;
 	Level level1_2;
 	Level level;
-	LevelRenderer1_1 lr1_1;
-	LevelRenderer lr1_2;
+	LevelRenderer lr;
 	
 	public GameScreen(RipGame game, String l) {
 		this.game = game;
 		
 		if (l == "level1_1") {
-			this.level1_1 = new Level_1_1(game);
-			this.lr1_1 = new LevelRenderer1_1(level1_1);
-			this.level = level1_1;
+			this.level = new Level_1_1(game);
+			this.lr = new LevelRenderer(level);
 		} else if (l == "level1_2") {
 			this.level = new Level_1_2(game);
-			this.lr1_2 = new LevelRenderer(level);
+			this.lr = new LevelRenderer(level);
 		}
 		
 	}
@@ -51,11 +48,9 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		level.update();
-		if (lr1_1 != null) {
-			lr1_1.render();
-		} else if (lr1_2 != null) {
-			lr1_2.render();
-		}
+		if (lr != null) {
+			lr.render();
+		} else { }
 	}
 
 	@Override

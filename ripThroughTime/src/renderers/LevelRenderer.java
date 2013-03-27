@@ -4,23 +4,18 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.rip.RipGame;
 import com.rip.levels.Level;
-import com.rip.levels.Level_1_2;
 import com.rip.objects.Enemy;
 import com.rip.objects.MovableEntity;
-import com.rip.objects.MovableEntity.Directions;
 import com.rip.objects.Player;
 import com.rip.objects.Raptor;
-import com.rip.screens.MainMenu;
 
 public class LevelRenderer {
 	//////////UNIVERSAL VARIABLES//////////
@@ -32,29 +27,33 @@ public class LevelRenderer {
 	Player player;
 	int width, height;
 	public final static int Y_LIMIT = 180;
-	public float levelTime = 0;
-	public int levelScore = 0;
-	public OrthographicCamera cam;
+	public static float levelTime = 0;
+	public static int levelScore = 0;
+	public static OrthographicCamera cam;
 	public static int camPos = 0;
 	public static float delta;
-	public ArrayList<Enemy> enemy_list;
-	public ArrayList<MovableEntity> drawables;
+	public static ArrayList<Enemy> enemy_list;
+	public static ArrayList<MovableEntity> drawables;
 	public Random r = new Random();
 	float stateTime = 0f;
-	public boolean move = true;
+	public static boolean move = true;
 	
 	//////////UNIVERSAL TEXTURES//////////
 	Texture playerTexture;
-	Texture timeFreezeOverlay = new Texture(Gdx.files.internal("data/timeFreezeOverlay.png"));
-	Texture level_complete = new Texture(Gdx.files.internal("data/level_complete.png"));
-	Texture timebaroutline = new Texture(Gdx.files.internal("data/timebaroutlineWhite.png"));
-	Texture timebar = new Texture(Gdx.files.internal("data/timebar.png"));
-	Texture healthbaroutline = new Texture(Gdx.files.internal("data/healthbaroutlineWhite.png"));
-	Texture healthbar = new Texture(Gdx.files.internal("data/healthbar.png"));
-	Texture pauseOverlay = new Texture(Gdx.files.internal("data/pauseOverlay.png"));
-	Texture timeFreezeLine = new Texture(Gdx.files.internal("data/timeLine.png"));
-	BitmapFont font = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite18.fnt"),false);
-	BitmapFont fontBig = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite32.fnt"),false);
+	
+	public LevelRenderer() {
+		width = 960;
+		height = 480;
+		
+		cam = new OrthographicCamera();
+		cam.setToOrtho(false, width, height);
+		
+		batch = new SpriteBatch();
+		
+		sr = new ShapeRenderer();
+		
+		drawables = new ArrayList<MovableEntity>();
+	}
 	
 	public LevelRenderer(Level level) {
 		this.level = level;
@@ -100,11 +99,13 @@ public class LevelRenderer {
 		
 			drawDrawables();
 		
-			drawHud();
-		
 			player.handleTime(this, level, game);
 		
 			player.handleMovement(this, level, game);
+			
+			level.drawHud(batch, level.levelHudColor, this);
+			
+			level.handleCheckPoints(this);
 		
 			drawables.clear();
 		
@@ -129,24 +130,8 @@ public class LevelRenderer {
 		}
 	}
 	
-	public void drawHud() {
-		font.draw(batch, "World  1   Level  1", camPos + 800, 470);
-		if (player.getTimeFreeze() == false) {
-			levelTime = (float)levelTime + delta;
-		}
-		font.draw(batch, "Time:     " + (int)levelTime, camPos + 800, 450);
-		font.draw(batch, "Score:     " + levelScore, camPos + 800, 430);
-		batch.draw(healthbar, camPos + 25, 450, player.getHealth()*2, 15);
-		batch.draw(healthbaroutline, camPos + 25 - 3, 450 - 3, 206, 21);
-		if (player.getTimeFreeze() == true) {
-			batch.draw(timeFreezeOverlay, camPos, 0);
-			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
-			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
-			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
-			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
-			batch.draw(timeFreezeLine, camPos + r.nextInt(960), 0);
-		}
-		batch.draw(timebar, camPos + 25, 425, player.getTime()*2, 15);
-		batch.draw(timebaroutline, camPos + 25 - 3, 425 - 3, 206, 21);
+	public void setLevel(Level level) {
+		this.level = level;
+		level.generateBackground();
 	}
 }

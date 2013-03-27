@@ -6,4 +6,5 @@
 <fullyQualifiedTypeName name="com.rip.RipGame"/>
 <fullyQualifiedTypeName name="com.rip.levels.Level_1_2"/>
 <fullyQualifiedTypeName name="com.rip.levels.Level"/>
+<fullyQualifiedTypeName name="renderers.LevelRenderer"/>
 </qualifiedTypeNameHistroy>

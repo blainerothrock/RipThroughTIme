@@ -2,14 +2,12 @@ package com.rip.objects;
 
 import java.util.Random;
 
+import renderers.LevelRenderer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 import com.rip.RipGame;
-import com.rip.objects.MovableEntity.Directions;
-
-import renderers.LevelRenderer1_1;
 
 public abstract class Enemy extends MovableEntity {
 
@@ -34,9 +32,9 @@ public abstract class Enemy extends MovableEntity {
 	
 	Directions dir = Directions.DIR_RIGHT;
 	
-	public Enemy(int x, int y, float width, float height, Texture texture,
-			int SPEED, float health) {
+	public Enemy(int x, int y, float width, float height, Texture texture, int SPEED, float health) {
 		super(x, y, width, height, SPEED, texture);
+		Gdx.app.log(RipGame.LOG, "Enemy Created.");
 		this.health = health;
 		collides_player = false;
 		make_flanks();
@@ -66,6 +64,9 @@ public abstract class Enemy extends MovableEntity {
 	
 	
 	public void track(Player p) {
+//		Gdx.app.log(RipGame.LOG, "Enemy -> X: " + getX() + ", Y: " + getY());
+//		Gdx.app.log(RipGame.LOG, "Player -> X: " + p.getMiddleX() + ", Y: " + p.getMiddleY());
+		
 		int dx, dy;
 		
 		dx = p.getMiddleX() - this.getMiddleX();
@@ -82,8 +83,8 @@ public abstract class Enemy extends MovableEntity {
 			
 			if (pY > 180) { pY = 180; }
 
-			this.setX(this.getX() + (int)((dx - this.SPEED) * LevelRenderer1_1.delta));
-			this.setY(this.getY() + (int)((dy - this.SPEED) * LevelRenderer1_1.delta));
+			this.setX(this.getX() + (int)((dx - this.SPEED) * LevelRenderer.delta));
+			this.setY(this.getY() + (int)((dy - this.SPEED) * LevelRenderer.delta));
 			
 			
 		} else {
@@ -92,13 +93,11 @@ public abstract class Enemy extends MovableEntity {
 				
 				trackX = p.getMiddleX();
 				trackY = p.getMiddleY() - (r.nextInt(400-200) + 200);
-				Gdx.app.log(RipGame.LOG, "trackX: " + trackX + " trackY: " + trackY );
-				Gdx.app.log(RipGame.LOG, "playerX: " + p.getX() + " playerY: " + p.getY() );
 			} else if (flankPoint1 == false) {
 				dx = trackX - this.getMiddleX();
 				dy = trackY - this.getMiddleY();
-				this.setX(this.getX() + (int)((dx - this.SPEED + 2) * LevelRenderer1_1.delta));
-				this.setY(this.getY() + (int)((dy - this.SPEED + 2) * LevelRenderer1_1.delta));
+				this.setX(this.getX() + (int)((dx - this.SPEED + 2) * LevelRenderer.delta));
+				this.setY(this.getY() + (int)((dy - this.SPEED + 2) * LevelRenderer.delta));
 				if (this.getMiddleX() <= trackX + this.width + 10 && this.getMiddleX() >= trackX - this.width + 10 && this.getMiddleY() <= trackY + this.height + 10 && this.getMiddleY() >= trackY - this.height + 10 ) {
 					flankPoint1 = true;
 					Gdx.app.log(RipGame.LOG, "flankPoin1 = " + flankPoint1);
@@ -113,8 +112,8 @@ public abstract class Enemy extends MovableEntity {
 			} else if (flankPoint2 == false) {
 				dx = trackX - this.getMiddleX();
 				dy = trackY - this.getMiddleY();
-				setX(getX() + (int)((dx - SPEED + 2) * LevelRenderer1_1.delta));
-				setY(getY() + (int)((dy - SPEED + 2) * LevelRenderer1_1.delta));
+				setX(getX() + (int)((dx - SPEED + 2) * LevelRenderer.delta));
+				setY(getY() + (int)((dy - SPEED + 2) * LevelRenderer.delta));
 				if (this.getMiddleX() <= trackX + this.width + 10 && this.getMiddleX() >= trackX - this.width + 10 && this.getMiddleY() <= trackY + this.height + 10 && this.getMiddleY() >= trackY - this.height + 10 ) {
 					flankPoint2 = true;
 					trackY = p.getY();
