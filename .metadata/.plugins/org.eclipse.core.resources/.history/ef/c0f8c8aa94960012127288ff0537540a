@@ -28,6 +28,8 @@ public class Level_1_1 extends Level {
 //	private InputHandler in;
 	
 	Random r = new Random();
+	int rightside;
+	int leftside;
 	
 	Timer t = new Timer();
 		
@@ -66,14 +68,32 @@ public class Level_1_1 extends Level {
 			levelHudColor = "black";
 	}
 	
-	public void spawnApe(int num) {
+	
+	public void checkPoint(int numOfEnemiesRap, int numOfEnemiesApe) {
 		int buffer = 200;
 		Random r = new Random();
-		int rightside;
-		int leftside;
+//		int rightside;
+//		int leftside;
 		boolean lr;
-		
-		for (int i = 0; i < num; i++) {
+
+		for (int i = 0; i < numOfEnemiesRap; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				Raptor raptor = new Raptor(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				raptor.spawnPoint = true;
+				LevelRenderer.enemy_list.add(raptor);
+				buffer += 200;
+				
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new Raptor(LevelRenderer.camPos - buffer , r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+
+		for (int i = 0; i < numOfEnemiesApe; i++) {
 			lr = r.nextBoolean();
 			if (lr) {
 				rightside = LevelRenderer.camPos + RipGame.WIDTH;
@@ -90,31 +110,6 @@ public class Level_1_1 extends Level {
 		}
 	}
 	
-	public void spawnRaptor(int num) {
-		int buffer = 200;
-		Random r = new Random();
-		int rightside;
-		int leftside;
-		boolean lr;
-
-		for (int i = 0; i < num; i++) {
-			lr = r.nextBoolean();
-			if (lr) {
-				rightside = LevelRenderer.camPos + RipGame.WIDTH;
-				Raptor raptor = new Raptor(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
-				raptor.spawnPoint = true;
-				LevelRenderer.enemy_list.add(raptor);
-				buffer += 200;
-				
-			} else {
-				leftside = LevelRenderer.camPos;
-				LevelRenderer.enemy_list.add(new Raptor(LevelRenderer.camPos - buffer , r.nextInt(LevelRenderer.Y_LIMIT)));
-				buffer += 200;
-			}
-
-		}
-	}
-	
 	@Override
 	public void handleCheckPoints(LevelRenderer lr) {
 		if (getEnemies().isEmpty() && LevelRenderer.move == false && LevelRenderer.camPos < 11500) {
@@ -125,7 +120,7 @@ public class Level_1_1 extends Level {
 		if (LevelRenderer.camPos >= 1500 && checkPoint1 == false) {
 			Gdx.app.log(RipGame.LOG, "checkpoint1");
 			LevelRenderer.move = false;
-			spawnApe(1);
+			checkPoint(0,1);
 			checkPoint1 = true;
 		}
 
@@ -134,14 +129,14 @@ public class Level_1_1 extends Level {
 		if (LevelRenderer.camPos >= 4000 && checkPoint2 == false && cp2Wave1 == false) {
 			Gdx.app.log(RipGame.LOG, "checkpoint2");
 			LevelRenderer.move = false;
-			spawnApe(3);
+			checkPoint(0, 3);
 			cp2Wave1 = true;
 		}
 
 		//wave2
 		if (getEnemies().isEmpty() && cp2Wave2 == false && cp2Wave1 == true) {
 			LevelRenderer.move = false;
-			spawnApe(2);
+			checkPoint(0,2);
 			cp2Wave2 = true;
 			checkPoint2 = true;
 		}
@@ -150,14 +145,14 @@ public class Level_1_1 extends Level {
 		//wave 1
 		if (LevelRenderer.camPos >= 7000 && checkPoint3 == false && cp3Wave1 == false) {
 			LevelRenderer.move = false;
-			spawnApe(2);
+			checkPoint(0,2);
 			cp3Wave1 = true;
 		}
 
 		//wave 2
 		if (getEnemies().isEmpty() && cp3Wave2 == false && cp3Wave1 == true) {
 			LevelRenderer.move = false;
-			spawnRaptor(1);
+			checkPoint(1,0);
 			cp3Wave2 = true;
 			checkPoint3 = true;
 		}
@@ -166,14 +161,14 @@ public class Level_1_1 extends Level {
 		//wave1
 		if (LevelRenderer.camPos >= 11000 && checkPoint4 == false && cp4Wave1 == false) {
 			LevelRenderer.move = false;
-			spawnApe(6);
+			checkPoint(0,6);
 			cp4Wave1 = true;
 		}
 
 		//wave2
 		if (getEnemies().isEmpty() && cp4Wave2 == false && cp4Wave1 == true) {
 			LevelRenderer.move = false;
-			spawnRaptor(3);
+			checkPoint(3,0);
 			cp4Wave2 = true;
 			checkPoint4 = true;
 		}
