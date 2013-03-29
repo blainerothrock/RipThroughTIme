@@ -1,0 +1,20 @@
+package com.rip.levels;
+
+import com.badlogic.gdx.Gdx;
+import com.rip.RipGame;
+import com.rip.objects.Player;
+
+public class Level_1_3 extends Level {
+	
+	public Level_1_3(RipGame game) {
+		super(game);
+		this.player = new Player(250, 158);
+		setIn(new InputHandler(this));
+		Gdx.input.setInputProcessor(getIn());
+		
+		levelLength = 14000;
+		levelName = "Level 1  1";
+		levelHudColor = "black";
+}
+
+}

@@ -7,6 +7,8 @@ import com.rip.RipGame;
 import com.rip.levels.Level;
 import com.rip.levels.Level_1_1;
 import com.rip.levels.Level_1_2;
+import com.rip.levels.Level_1_3;
+import com.rip.levels.Level_1_4;
 //import com.rip.levels.Level;
 
 public class GameScreen implements Screen {
@@ -25,6 +27,12 @@ public class GameScreen implements Screen {
 			this.lr = new LevelRenderer(level);
 		} else if (l == "level1_2") {
 			this.level = new Level_1_2(game);
+			this.lr = new LevelRenderer(level);
+		} else if (l == "level1_3") {
+			this.level = new Level_1_3(game);
+			this.lr = new LevelRenderer(level);
+		} else if (l == "level1_4") {
+			this.level = new Level_1_4(game);
 			this.lr = new LevelRenderer(level);
 		}
 		
