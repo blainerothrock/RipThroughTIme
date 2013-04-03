@@ -15,15 +15,15 @@ import com.rip.objects.Enemy;
 import com.rip.objects.Player;
 
 public class Level_1_4 extends Level {
-	
+
 	public RipGame game;
 	Player player;
 	LevelRenderer lr;
 	ArrayList<Enemy> enemies;
-	
+
 	Random r = new Random();
-	
-	
+
+
 	Array<BackgroundObject> bgBack = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> bgFront = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> bgMiddle = new Array<BackgroundObject>(100);
@@ -32,98 +32,24 @@ public class Level_1_4 extends Level {
 	Array<BackgroundObject> rocks = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> rocks2 = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> smallRocks = new Array<BackgroundObject>(100);
-	
-	boolean checkPoint1, checkPoint2, checkPoint3, checkPoint4, levelComplete = false;
-	boolean cp2Wave1, cp2Wave2 = false;
-	boolean cp3Wave1, cp3Wave2 = false;
-	boolean cp4Wave1, cp4Wave2 = false;
-	boolean end = false;
-	
-	
+
+
 	public Level_1_4(RipGame game) {
 		super(game);
 		levelLength = 14000;
 		levelName = "Level 1   4";
 		levelHudColor = "white";
 	}
-	
+
 //	public LevelRenderer1_2 getRenderer() {
 //		return lr;
 //	}
 	
 	@Override
 	public void handleCheckPoints(LevelRenderer lr) {
-		if (getEnemies().isEmpty() && LevelRenderer.move == false && LevelRenderer.camPos < 11500) {
-			LevelRenderer.move = true;
-		}
-
-		//CHECKPOINT 1//
-		if (LevelRenderer.camPos >= 1500 && checkPoint1 == false) {
-			Gdx.app.log(RipGame.LOG, "checkpoint1");
-			LevelRenderer.move = false;
-			spawnApe(1);
-			checkPoint1 = true;
-		}
-
-		//CHECKPOINT 2//
-		//wave 1
-		if (LevelRenderer.camPos >= 4000 && checkPoint2 == false && cp2Wave1 == false) {
-			Gdx.app.log(RipGame.LOG, "checkpoint2");
-			LevelRenderer.move = false;
-			spawnApe(3);
-			cp2Wave1 = true;
-		}
-
-		//wave2
-		if (getEnemies().isEmpty() && cp2Wave2 == false && cp2Wave1 == true) {
-			LevelRenderer.move = false;
-			spawnApe(2);
-			cp2Wave2 = true;
-			checkPoint2 = true;
-		}
-
-		//CHECKPOINT 3//
-		//wave 1
-		if (LevelRenderer.camPos >= 7000 && checkPoint3 == false && cp3Wave1 == false) {
-			LevelRenderer.move = false;
-			spawnApe(2);
-			cp3Wave1 = true;
-		}
-
-		//wave 2
-		if (getEnemies().isEmpty() && cp3Wave2 == false && cp3Wave1 == true) {
-			LevelRenderer.move = false;
-			spawnRaptor(1);
-			cp3Wave2 = true;
-			checkPoint3 = true;
-		}
-
-		//CHECKPOINT 4 -- FINAL//
-		//wave1
-		if (LevelRenderer.camPos >= 11000 && checkPoint4 == false && cp4Wave1 == false) {
-			LevelRenderer.move = false;
-			spawnApe(6);
-			cp4Wave1 = true;
-		}
-
-		//wave2
-		if (getEnemies().isEmpty() && cp4Wave2 == false && cp4Wave1 == true) {
-			LevelRenderer.move = false;
-			spawnRaptor(3);
-			cp4Wave2 = true;
-			checkPoint4 = true;
-		}
-
-		//END LEVEL//
-
-		if (checkPoint4 == true && LevelRenderer.camPos >= 11500) {
-			LevelRenderer.move = false;
-			end = true;
-			Gdx.app.log(RipGame.LOG, "End Level 1-1");
-			
-		}
+		
 	}
-	
+
 	@Override
 	public void generateBackground() {
 		//////////background textures//////////
@@ -145,8 +71,8 @@ public class Level_1_4 extends Level {
 			foreground.add(fg);
 			ranPos += fg1.getWidth();
 		}
-		
-	
+
+
 		//furthest back background
 		Pixmap bgBack1 = new Pixmap(Gdx.files.internal("level1_4/back1.png"));
 		Pixmap bgBack2 = new Pixmap(Gdx.files.internal("level1_4/back2.png"));
@@ -166,7 +92,7 @@ public class Level_1_4 extends Level {
 			bgBack.add(bgB);
 			ranPos += bgBack1.getWidth();
 		}
-		
+
 		//middle background
 		Pixmap bgMiddle1 = new Pixmap(Gdx.files.internal("level1_4/middle1.png"));
 		Pixmap bgMiddle2 = new Pixmap(Gdx.files.internal("level1_4/middle2.png"));
@@ -186,7 +112,7 @@ public class Level_1_4 extends Level {
 			bgM.setTexture();
 			bgMiddle.add(bgM);
 		}
-		
+
 		///closest back background object
 		Pixmap bgFront1 = new Pixmap(Gdx.files.internal("level1_4/front1.png"));
 		Pixmap bgFront2 = new Pixmap(Gdx.files.internal("level1_4/front2.png"));
@@ -206,7 +132,7 @@ public class Level_1_4 extends Level {
 			bgF.setTexture();
 			bgFront.add(bgF);
 		}
-		
+
 		Pixmap groundRock1 = new Pixmap(Gdx.files.internal("level1_4/ground1_1.png"));
 		Pixmap groundRock2 = new Pixmap(Gdx.files.internal("level1_4/ground1_2.png"));
 		Pixmap groundRock3 = new Pixmap(Gdx.files.internal("level1_4/ground1_3.png"));
@@ -251,7 +177,7 @@ public class Level_1_4 extends Level {
 			gR.setTexture();
 			groundRocks.add(gR);
 		}
-		
+
 		Pixmap rock1 = new Pixmap(Gdx.files.internal("level1_4/paint3.png"));
 		Pixmap rock2 = new Pixmap(Gdx.files.internal("level1_4/paint4.png"));
 		Pixmap rock3 = new Pixmap(Gdx.files.internal("level1_4/paint7.png"));
@@ -276,72 +202,82 @@ public class Level_1_4 extends Level {
 			rR.setTexture();
 			rocks.add(rR);
 		}
-		
-		Pixmap smallRock1 = new Pixmap(Gdx.files.internal("level1_4/rocksmall1.png"));
-		Pixmap smallRock2 = new Pixmap(Gdx.files.internal("level1_4/rocksmall2.png"));
-		Pixmap smallRock3 = new Pixmap(Gdx.files.internal("level1_4/rocksmall3.png"));
-		Pixmap smallRock4 = new Pixmap(Gdx.files.internal("level1_4/rocksmall4.png"));
-		Pixmap smallRock5 = new Pixmap(Gdx.files.internal("level1_4/rocksmall5.png"));
+
+		Pixmap smallRock1 = new Pixmap(Gdx.files.internal("level1_4/cluster1.png"));
+		Pixmap smallRock2 = new Pixmap(Gdx.files.internal("level1_4/cluster2.png"));
+		Pixmap smallRock3 = new Pixmap(Gdx.files.internal("level1_4/cluster3.png"));
+		Pixmap smallRock4 = new Pixmap(Gdx.files.internal("level1_4/cluster4.png"));
+		Pixmap smallRock5 = new Pixmap(Gdx.files.internal("level1_4/cluster5.png"));
+		Pixmap smallRock6 = new Pixmap(Gdx.files.internal("level1_4/cluster6.png"));
+		Pixmap smallRock7 = new Pixmap(Gdx.files.internal("level1_4/cluster7.png"));
+		Pixmap smallRock8 = new Pixmap(Gdx.files.internal("level1_4/cluster8.png"));
+		Pixmap smallRock9 = new Pixmap(Gdx.files.internal("level1_4/cluster9.png"));
+		Pixmap smallRock10 = new Pixmap(Gdx.files.internal("level1_4/cluster10.png"));
 		Array<Pixmap> smallRockPix = new Array<Pixmap>();
 		smallRockPix.add(smallRock1);
 		smallRockPix.add(smallRock2);
 		smallRockPix.add(smallRock3);
 		smallRockPix.add(smallRock4);
 		smallRockPix.add(smallRock5);
+		smallRockPix.add(smallRock6);
+		smallRockPix.add(smallRock7);
+		smallRockPix.add(smallRock8);
+		smallRockPix.add(smallRock9);
+		smallRockPix.add(smallRock10);
 		ranPos = -100;
 		while (ranPos < levelLength) {
-			int randomX = r.nextInt(100-25) + 25;
-			int randomY = r.nextInt(235 - 180) + 180;
+			int randomX = r.nextInt(150-100) + 100;
+			int randomY = r.nextInt(210-190) + 190;
 			ranPos += randomX;
 			BackgroundObject sR = new BackgroundObject(smallRockPix, ranPos, randomY);
 			sR.setTexture();
 			smallRocks.add(sR);
 		}
-		
-		
-		
+
+
+
 	}
 	@Override
 	public void drawBackground(SpriteBatch batch) {
-		
-		
-		
+
+
+
 		for (BackgroundObject i : bgBack) {
 			if (i.getX() > LevelRenderer.camPos - 250 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
-		
+
 		for (BackgroundObject i : bgMiddle) {
 			if (i.getX() > LevelRenderer.camPos - 250 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
-		
+
 		for (BackgroundObject i : rocks) {
 			if (i.getX() > LevelRenderer.camPos - 250 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
-		
+
 		for (BackgroundObject i : groundRocks) {
 			if (i.getX() > LevelRenderer.camPos - 250 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
-		
+
 		for (BackgroundObject i : bgFront) {
 			if (i.getX() > LevelRenderer.camPos - 250 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
-		
+
 		for (BackgroundObject i : foreground) {
 			if (i.getX() > LevelRenderer.camPos - 1000 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
-		
+
 		for (BackgroundObject i : smallRocks) {
 			if (i.getX() > LevelRenderer.camPos - 250 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
@@ -353,23 +289,28 @@ public class Level_1_4 extends Level {
 		for (BackgroundObject i : bgFront) {
 			i.setX(i.getX() + 0.5f);
 		}
-		
+
 		for (BackgroundObject i : groundRocks) {
 			i.setX(i.getX() + 1.0f);
 		}
-		
+
 		for (BackgroundObject i : rocks) {
 			i.setX(i.getX() + 1.25f);
 		}
-		
+
 		for (BackgroundObject i : bgMiddle) {
 			i.setX(i.getX() + 1.5f);
 		}
-		
+
 		for (BackgroundObject i : bgBack) {
 			i.setX(i.getX() + 2.5f);
 		}
 	}
 	
-}
+	public void dispose() {
+		//leveltheme.dispose();
+		super.dispose();
+		
+	}
 
+}

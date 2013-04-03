@@ -1,5 +1,7 @@
 package com.rip.objects;
 
+import renderers.LevelRenderer;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -131,6 +133,16 @@ public abstract class MovableEntity extends Entity {
 	public void setStateTime(float stateTime) {
 		this.stateTime = stateTime;
 	}
+
+	public Directions getDir() {
+		return dir;
+	}
+
+	public void setDir(Directions dir) {
+		this.dir = dir;
+	}
+	
+	
 	/*
 	public void track(Player p) {
 		int pX = p.getX();

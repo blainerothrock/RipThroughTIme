@@ -1,12 +1,10 @@
 package com.rip.levels;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import renderers.LevelRenderer;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -14,25 +12,24 @@ import com.badlogic.gdx.utils.Timer;
 import com.rip.RipGame;
 import com.rip.objects.Ape;
 import com.rip.objects.BackgroundObject;
-import com.rip.objects.Enemy;
 import com.rip.objects.Player;
 import com.rip.objects.Raptor;
 
 
 public class Level_1_1 extends Level {
-	
-	public RipGame game;
-	Player player;
-	LevelRenderer lr;
-	ArrayList<Enemy> enemies;
+
+//	public RipGame game;
+//	Player player;
+//	LevelRenderer lr;
+//	ArrayList<Enemy> enemies;
 //	private InputHandler in;
-	
-	Random r = new Random();
-	
+
+//	Random r = new Random();
+
 	Timer t = new Timer();
-		
-	Music leveltheme;
+
 	
+
 	BackgroundObject sk;
 	Array<BackgroundObject> grounds = new Array<BackgroundObject>(5);
 	Array<BackgroundObject> trees = new Array<BackgroundObject>(100);
@@ -40,13 +37,14 @@ public class Level_1_1 extends Level {
 	Array<BackgroundObject> volcanos = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> clouds = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> debris = new Array<BackgroundObject>(100);
-	
+	Array<BackgroundObject> fog = new Array<BackgroundObject>(100);
+
 	boolean checkPoint1, checkPoint2, checkPoint3, checkPoint4, levelComplete = false;
 	boolean cp2Wave1, cp2Wave2 = false;
 	boolean cp3Wave1, cp3Wave2 = false;
 	boolean cp4Wave1, cp4Wave2 = false;
-	boolean end = false;
-	
+	//public boolean end = false;
+
 	public Level_1_1(RipGame game) {
 			super(game);
 			this.player = new Player(250, 158);
@@ -58,14 +56,95 @@ public class Level_1_1 extends Level {
 			enemies.add(raptor_one);
 			enemies.add(raptor_two);
 			*/
-			leveltheme = Gdx.audio.newMusic(Gdx.files.internal("data/Prehistoric Main.mp3"));
-			leveltheme.setLooping(true);
-			
+//			leveltheme = Gdx.audio.newMusic(Gdx.files.internal("data/Prehistoric Main.mp3"));
+//			leveltheme.setLooping(true);
+
 			levelLength = 14000;
 			levelName = "Level 1  1";
 			levelHudColor = "black";
 	}
+
+	public void checkPoint(int numOfEnemiesRap, int numOfEnemiesApe) {
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+		int x;
+		int y;
+		int xmin_right, xmax_right, xmin_left, xmax_left;
+		int ymin, ymax;
+		
+		//avoid initiating with overlap
+		ymax = LevelRenderer.Y_LIMIT;
+		ymin = LevelRenderer.Y_LIMIT - 87;
+		
+		xmin_right = LevelRenderer.camPos + RipGame.WIDTH + 50;
+		xmax_right = xmin_right + 224;
+		
+		xmax_left = LevelRenderer.camPos - 50;
+		xmin_left = xmax_left - 224;
+		
+		for (int i = 0; i < numOfEnemiesRap; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				x = generateXY(xmin_right, xmax_right);
+				y = generateXY(ymin, ymax);
+				
+				ymin -= 87;
+				ymax -= 87;
+				
+				if (ymax <= LevelRenderer.Y_LIMIT - 300) {
+					ymax = LevelRenderer.Y_LIMIT;
+					ymin = LevelRenderer.Y_LIMIT - 87;
+				}
+				
+				xmax_right += 224;
+				xmin_right += 224;
+				
+				enemies.add(new Raptor(x, y));
+			} else {
+				leftside = LevelRenderer.camPos;
+				x = generateXY(xmin_right, xmax_right);
+				y = generateXY(ymin, ymax);
+				
+				ymin -= 87;
+				ymax -= 87;
+				
+				if (ymax <= LevelRenderer.Y_LIMIT - 300) {
+					ymax = LevelRenderer.Y_LIMIT;
+					ymin = LevelRenderer.Y_LIMIT - 87;
+				}
+				
+				xmax_left -= 224;
+				xmin_left -= 224;
+				enemies.add(new Raptor(x, y));
+			}
+
+		}
+		
+		
+
+		for (int i = 0; i < numOfEnemiesApe; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				enemies.add(new Ape(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRenderer.Y_LIMIT)));
+			} else {
+				leftside = LevelRenderer.camPos;
+				enemies.add(new Ape(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRenderer.Y_LIMIT)));
+			}
+
+		}
+	}
 	
+	
+	
+	public int generateXY(int min, int max) {
+		//Min + (int)(Math.random() * ((Max - Min) + 1))
+		return min + (int)(Math.random() * ((max - min) + 1));
+	}
+
 	@Override
 	public void handleCheckPoints(LevelRenderer lr) {
 		if (getEnemies().isEmpty() && LevelRenderer.move == false && LevelRenderer.camPos < 11500) {
@@ -76,7 +155,7 @@ public class Level_1_1 extends Level {
 		if (LevelRenderer.camPos >= 1500 && checkPoint1 == false) {
 			Gdx.app.log(RipGame.LOG, "checkpoint1");
 			LevelRenderer.move = false;
-			spawnApe(1);
+			checkPoint(0,1);
 			checkPoint1 = true;
 		}
 
@@ -85,30 +164,31 @@ public class Level_1_1 extends Level {
 		if (LevelRenderer.camPos >= 4000 && checkPoint2 == false && cp2Wave1 == false) {
 			Gdx.app.log(RipGame.LOG, "checkpoint2");
 			LevelRenderer.move = false;
-			spawnApe(3);
+			checkPoint(0,3);
 			cp2Wave1 = true;
 		}
 
 		//wave2
 		if (getEnemies().isEmpty() && cp2Wave2 == false && cp2Wave1 == true) {
 			LevelRenderer.move = false;
-			spawnApe(2);
+			checkPoint(0,2);
 			cp2Wave2 = true;
 			checkPoint2 = true;
 		}
+		
 
 		//CHECKPOINT 3//
 		//wave 1
 		if (LevelRenderer.camPos >= 7000 && checkPoint3 == false && cp3Wave1 == false) {
 			LevelRenderer.move = false;
-			spawnApe(2);
+			checkPoint(0,2);
 			cp3Wave1 = true;
 		}
 
 		//wave 2
 		if (getEnemies().isEmpty() && cp3Wave2 == false && cp3Wave1 == true) {
 			LevelRenderer.move = false;
-			spawnRaptor(1);
+			checkPoint(1,0);
 			cp3Wave2 = true;
 			checkPoint3 = true;
 		}
@@ -117,14 +197,14 @@ public class Level_1_1 extends Level {
 		//wave1
 		if (LevelRenderer.camPos >= 11000 && checkPoint4 == false && cp4Wave1 == false) {
 			LevelRenderer.move = false;
-			spawnApe(6);
+			checkPoint(0,6);
 			cp4Wave1 = true;
 		}
 
 		//wave2
 		if (getEnemies().isEmpty() && cp4Wave2 == false && cp4Wave1 == true) {
 			LevelRenderer.move = false;
-			spawnRaptor(3);
+			checkPoint(3,0);
 			cp4Wave2 = true;
 			checkPoint4 = true;
 		}
@@ -135,37 +215,62 @@ public class Level_1_1 extends Level {
 			LevelRenderer.move = false;
 			end = true;
 			Gdx.app.log(RipGame.LOG, "End Level 1-1");
-			
+
 		}
 	}
-	
+
 	@Override
 	public void generateBackground() {
-		Pixmap g = new Pixmap(Gdx.files.internal("data/ground.png"));
+		Pixmap ground1 = new Pixmap(Gdx.files.internal("level1_1/ground1.png"));
+		Pixmap ground2 = new Pixmap(Gdx.files.internal("level1_1/ground2.png"));
+		Pixmap ground3 = new Pixmap(Gdx.files.internal("level1_1/ground3.png"));
+		Pixmap ground4 = new Pixmap(Gdx.files.internal("level1_1/ground4.png"));
+		Array<Pixmap> groundPix = new Array<Pixmap>();
+		groundPix.add(ground1);
+		groundPix.add(ground2);
+		groundPix.add(ground3);
+		groundPix.add(ground4);
 		int startX = -20;
 		int startY = 0;
 		while (startX < levelLength) {
-			BackgroundObject gr = new BackgroundObject(g, startX, startY);
+			BackgroundObject gr = new BackgroundObject(groundPix, startX, startY);
+			gr.setTexture();
 			grounds.add(gr);
-			startX = startX + g.getWidth();
+			startX = startX + ground1.getWidth();
 		}
 
 
 		//sky -- doesn't ever move. 
-		Pixmap s = new Pixmap(Gdx.files.internal("data/sky.png"));
+		Pixmap s = new Pixmap(Gdx.files.internal("level1_1/sky.png"));
 		sk = new BackgroundObject(s,0,0);
-		
-		
+
+
 		//random tree objects.
-		Pixmap tree1 = new Pixmap(Gdx.files.internal("data/tree.png"));
-		Pixmap tree2 = new Pixmap(Gdx.files.internal("data/tree2.png"));
+		Pixmap tree1 = new Pixmap(Gdx.files.internal("level1_1/tree1.png"));
+		Pixmap tree2 = new Pixmap(Gdx.files.internal("level1_1/tree2.png"));
+		Pixmap tree3 = new Pixmap(Gdx.files.internal("level1_1/tree3.png"));
+		Pixmap tree4 = new Pixmap(Gdx.files.internal("level1_1/tree4.png"));
+		Pixmap tree5 = new Pixmap(Gdx.files.internal("level1_1/tree5.png"));
+		Pixmap tree6 = new Pixmap(Gdx.files.internal("level1_1/tree6.png"));
+		Pixmap tree7 = new Pixmap(Gdx.files.internal("level1_1/tree7.png"));
+		Pixmap tree8 = new Pixmap(Gdx.files.internal("level1_1/tree8.png"));
+		Pixmap tree9 = new Pixmap(Gdx.files.internal("level1_1/tree9.png"));
+		Pixmap tree10 = new Pixmap(Gdx.files.internal("level1_1/tree10.png"));
 		Array<Pixmap> treesPix = new Array<Pixmap>();
 		treesPix.add(tree1);
 		treesPix.add(tree2);
+		treesPix.add(tree3);
+		treesPix.add(tree4);
+		treesPix.add(tree5);
+		treesPix.add(tree6);
+		treesPix.add(tree7);
+		treesPix.add(tree8);
+		treesPix.add(tree9);
+		treesPix.add(tree10);
 		int ranPos = -100;
 		while (ranPos < levelLength * (1-(.5/3))) {
 			int randomX = r.nextInt(150-100) + 100;
-			int randomY = r.nextInt(235-210) + 210;
+			int randomY = 225;
 			ranPos = ranPos + randomX;
 			BackgroundObject t = new BackgroundObject(treesPix, ranPos, randomY);
 			t.setTexture();
@@ -173,11 +278,15 @@ public class Level_1_1 extends Level {
 		}
 
 		    //random bush objects.
-			Pixmap bush1 = new Pixmap(Gdx.files.internal("data/bush.png"));
-			Pixmap bush2 = new Pixmap(Gdx.files.internal("data/bush2.png"));
+			Pixmap bush1 = new Pixmap(Gdx.files.internal("level1_1/bush1.png"));
+			Pixmap bush2 = new Pixmap(Gdx.files.internal("level1_1/bush2.png"));
+			Pixmap bush3 = new Pixmap(Gdx.files.internal("level1_1/bush3.png"));
+			Pixmap bush4 = new Pixmap(Gdx.files.internal("level1_1/bush4.png"));
 			Array<Pixmap> bushPix = new Array<Pixmap>();
 			bushPix.add(bush1);
 			bushPix.add(bush2);
+			bushPix.add(bush3);
+			bushPix.add(bush4);
 			ranPos = -30;
 			while (ranPos < levelLength) {
 				int randomX = r.nextInt(75-30) + 30;
@@ -189,15 +298,15 @@ public class Level_1_1 extends Level {
 			}
 
 			//random volcano objects
-			Pixmap volcano1 = new Pixmap(Gdx.files.internal("data/volcano.png"));
-			Pixmap volcano2 = new Pixmap(Gdx.files.internal("data/volcanosmall.png"));
+			Pixmap volcano1 = new Pixmap(Gdx.files.internal("level1_1/volcano.png"));
+			Pixmap volcano2 = new Pixmap(Gdx.files.internal("level1_1/volcanosmall.png"));
 			Array<Pixmap> volcanoPix = new Array<Pixmap>();
 			volcanoPix.add(volcano1);
 			volcanoPix.add(volcano2);
 			ranPos = -300;
 			while (ranPos < levelLength * (1-(1.5/3))) {
 				int randomX = r.nextInt(500-300) + 300;
-				int randomY = r.nextInt(260-230) + 230;
+				int randomY = 230;
 				ranPos = ranPos + randomX;
 				BackgroundObject v = new BackgroundObject(volcanoPix, ranPos, randomY);
 				v.setTexture();
@@ -205,10 +314,10 @@ public class Level_1_1 extends Level {
 			}
 
 			//random cloud objects
-			Pixmap cloud1 = new Pixmap(Gdx.files.internal("data/cloud1.png"));
-			Pixmap cloud2 = new Pixmap(Gdx.files.internal("data/cloud2.png"));
-			Pixmap cloud3 = new Pixmap(Gdx.files.internal("data/cloud3.png"));
-			Pixmap cloud4 = new Pixmap(Gdx.files.internal("data/cloud4.png"));
+			Pixmap cloud1 = new Pixmap(Gdx.files.internal("level1_1/cloud1.png"));
+			Pixmap cloud2 = new Pixmap(Gdx.files.internal("level1_1/cloud2.png"));
+			Pixmap cloud3 = new Pixmap(Gdx.files.internal("level1_1/cloud3.png"));
+			Pixmap cloud4 = new Pixmap(Gdx.files.internal("level1_1/cloud4.png"));
 			Array<Pixmap> cloudPix = new Array<Pixmap>();
 			cloudPix.add(cloud1);
 			cloudPix.add(cloud2);
@@ -241,8 +350,28 @@ public class Level_1_1 extends Level {
 				d.setTexture();
 				debris.add(d);
 			}
+			
+			//fog objects
+			Pixmap fog1 = new Pixmap(Gdx.files.internal("level1_1/fog1.png"));
+			Pixmap fog2 = new Pixmap(Gdx.files.internal("level1_1/fog2.png"));
+			Pixmap fog3 = new Pixmap(Gdx.files.internal("level1_1/fog3.png"));
+			Pixmap fog4 = new Pixmap(Gdx.files.internal("level1_1/fog4.png"));
+			Array<Pixmap> fogPix = new Array<Pixmap>();
+			fogPix.add(fog1);
+			fogPix.add(fog2);
+			fogPix.add(fog3);
+			fogPix.add(fog4);
+			ranPos = -500;
+			while (ranPos < levelLength) {
+				int randomX = r.nextInt(800 - 550) + 550;
+				int randomY = r.nextInt(200 - 150) + 180;
+				ranPos = ranPos + randomX;
+				BackgroundObject f = new BackgroundObject(fogPix, ranPos, randomY);
+				f.setTexture();
+				fog.add(f);
+			}
 	}
-	
+
 	@Override
 	public void drawBackground(SpriteBatch batch) {
 		batch.draw(sk.getTexture(), sk.getX(), sk.getY());
@@ -264,7 +393,7 @@ public class Level_1_1 extends Level {
 
 		//draw random trees only in visible screen.
 		for (BackgroundObject i : trees) {
-			if (i.getX() > LevelRenderer.camPos - 130 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
+			if (i.getX() > LevelRenderer.camPos - 175 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
@@ -282,6 +411,12 @@ public class Level_1_1 extends Level {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}
 		}
+		
+		for (BackgroundObject i : fog) {
+			if (i.getX() > LevelRenderer.camPos - 750 && i.getX() < LevelRenderer.camPos + RipGame.WIDTH + 20) {
+				batch.draw(i.getTexture(), i.getX(), i.getY());
+			}
+		}
 
 		//draw random debris objects only in visible screen.
 		for (BackgroundObject i : debris) {
@@ -289,9 +424,9 @@ public class Level_1_1 extends Level {
 				batch.draw(i.getTexture(), i.getX(), i.getY());
 			}	
 		}
-		
+
 	}
-	
+
 	@Override
 	public void parallax() {
 		sk.setX(sk.getX() + 3f);
@@ -308,6 +443,223 @@ public class Level_1_1 extends Level {
 			i.setX(i.getX() + 0.5f);
 		}
 		
+		for (BackgroundObject i : fog) {
+			i.setX(i.getX() + 0.25f);
+		}
+
 	}
+
+
+
+	public void dispose() {
+		/*
+		leveltheme.dispose();
+		this.g.dispose();
+		this.s.dispose(); 
+		this.tree1.dispose(); 
+		this.tree2.dispose();
+		this.bush1.dispose(); 
+		this.bush2.dispose();
+		this.volcano1.dispose(); 
+		this.volcano2.dispose();
+		this.cloud1.dispose(); 
+		this.cloud2.dispose(); 
+		this.cloud3.dispose(); 
+		this.cloud4.dispose(); 
+		this.debris1.dispose(); 
+		this.debris2.dispose(); 
+		this.debris3.dispose();
+		*/
+		
+		
+		super.dispose();
+		
+	}
+
+	
+	
+	
 }
+
+
+
+
+/*
+
+package com.rip.levels;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import renderers.LevelRender;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.rip.RipGame;
+import com.rip.objects.Ape;
+import com.rip.objects.Enemy;
+import com.rip.objects.Player;
+import com.rip.objects.Raptor;
+
+
+
+public class Level_1_1 {
+	
+	public RipGame game;
+	Player player;
+	LevelRender lr;
+	ArrayList<Enemy> enemies;
+	private InputHandler in;
+		
+	Music leveltheme;
+	
+	public Level_1_1(RipGame game) {
+			this.game = game;
+			enemies = new ArrayList<Enemy>();
+			this.player = new Player(250, 158);
+			setIn(new InputHandler(this));
+			Gdx.input.setInputProcessor(getIn());
+			/*
+			Raptor raptor_one = new Raptor(800, 50);
+			Raptor raptor_two = new Raptor(500, 150);
+			enemies.add(raptor_one);
+			enemies.add(raptor_two);
+			
+			leveltheme = Gdx.audio.newMusic(Gdx.files.internal("data/Prehistoric Main.mp3"));
+			leveltheme.setLooping(true);
+	}
+	
+	public void checkPoint(int numOfEnemiesRap, int numOfEnemiesApe) {
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+		int x;
+		int y;
+		int xmin_right, xmax_right, xmin_left, xmax_left;
+		int ymin, ymax;
+		
+		//avoid initiating with overlap
+		ymax = LevelRender.Y_LIMIT;
+		ymin = LevelRender.Y_LIMIT - 87;
+		
+		xmin_right = LevelRender.camPos + RipGame.WIDTH + 50;
+		xmax_right = xmin_right + 224;
+		
+		xmax_left = LevelRender.camPos - 50;
+		xmin_left = xmax_left - 224;
+		
+		for (int i = 0; i < numOfEnemiesRap; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRender.camPos + RipGame.WIDTH;
+				x = generateXY(xmin_right, xmax_right);
+				y = generateXY(ymin, ymax);
+				
+				ymin -= 87;
+				ymax -= 87;
+				
+				if (ymax <= LevelRender.Y_LIMIT - 300) {
+					ymax = LevelRender.Y_LIMIT;
+					ymin = LevelRender.Y_LIMIT - 87;
+				}
+				
+				xmax_right += 224;
+				xmin_right += 224;
+				
+				enemies.add(new Raptor(x, y));
+			} else {
+				leftside = LevelRender.camPos;
+				x = generateXY(xmin_right, xmax_right);
+				y = generateXY(ymin, ymax);
+				
+				ymin -= 87;
+				ymax -= 87;
+				
+				if (ymax <= LevelRender.Y_LIMIT - 300) {
+					ymax = LevelRender.Y_LIMIT;
+					ymin = LevelRender.Y_LIMIT - 87;
+				}
+				
+				xmax_left -= 224;
+				xmin_left -= 224;
+				enemies.add(new Raptor(x, y));
+			}
+
+		}
+		
+		
+
+		for (int i = 0; i < numOfEnemiesApe; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRender.camPos + RipGame.WIDTH;
+				enemies.add(new Ape(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRender.Y_LIMIT)));
+			} else {
+				leftside = LevelRender.camPos;
+				enemies.add(new Ape(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRender.Y_LIMIT)));
+			}
+
+		}
+	}
+	
+	
+	
+	public int generateXY(int min, int max) {
+		//Min + (int)(Math.random() * ((Max - Min) + 1))
+		return min + (int)(Math.random() * ((max - min) + 1));
+	}
+	
+		
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
+
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+
+
+	public Player getPlayer(){
+		return player;
+	}
+	
+	public void update() {
+		player.update();
+	}
+
+	public void setRenderer(LevelRender lr) {
+		this.lr = lr;
+	}
+	
+	public LevelRender getRenderer() {
+		return lr;
+	}
+
+
+	public Music getLeveltheme() {
+		return leveltheme;
+	}
+
+	public InputHandler getIn() {
+		return in;
+	}
+
+	public void setIn(InputHandler in) {
+		this.in = in;
+	}
+	
+	
+	public void dispose() {
+		
+		player.dispose();
+		enemies.clear();
+		leveltheme.dispose();
+		
+		
+	}
+	
+	
+}*/
 

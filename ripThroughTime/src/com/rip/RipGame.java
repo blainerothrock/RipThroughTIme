@@ -2,7 +2,7 @@ package com.rip;
 
 
 import com.badlogic.gdx.Game;
-import com.rip.screens.MainMenu;
+import com.rip.screens.SplashScreen;
 
 
 
@@ -22,7 +22,7 @@ public class RipGame extends Game {
 	
 	@Override
 	public void create() {	
-		setScreen(new MainMenu(this));
+		setScreen(new SplashScreen(this));
 	}
 
 	@Override

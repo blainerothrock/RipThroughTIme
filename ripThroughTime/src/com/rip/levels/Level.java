@@ -28,6 +28,8 @@ public abstract class Level {
 	public String levelName;
 	public String levelHudColor;
 	
+	public boolean end;
+	
 	Random r = new Random();
 	
 	//////////HUD OBJECTS//////////

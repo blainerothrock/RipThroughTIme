@@ -84,14 +84,6 @@ public abstract class Entity {
 		this.bounds.y = y;
 		this.hitableBox.y = y + (height / 2);
 	}
-	
-	public int getMiddleX() {
-		return (int)(getX() + (getWidth() / 2));
-	}
-	
-	public int getMiddleY() {
-		return (int)(getY() + (getHeight() / 2));
-	}
 
 
 
@@ -125,6 +117,10 @@ public abstract class Entity {
 
 	public void setBoxset(float boxset) {
 		this.boxset = boxset;
+	}
+	
+	public void dispose() {
+		
 	}
 	
 	
