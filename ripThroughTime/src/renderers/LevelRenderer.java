@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.rip.RipGame;
 import com.rip.levels.Level;
 import com.rip.objects.Ape;
@@ -43,6 +44,9 @@ public class LevelRenderer {
 	public Random r = new Random();
 	float stateTime = 0f;
 	public static boolean move = true;
+	
+	public static Stage stage;
+	public static boolean pause = false;
 
 	//////////UNIVERSAL TEXTURES//////////
 	Texture playerTexture;
@@ -79,6 +83,8 @@ public class LevelRenderer {
 		game = level.game;
 
 		level.generateBackground();
+		
+		
 	}
 
 	public void render() {
@@ -115,9 +121,11 @@ public class LevelRenderer {
 
 			drawDrawables();
 
-			player.handleTime(this, level, game);
+			if (!pause) {
+				player.handleTime(this, level, game);
 
-			player.handleMovement(this, level, game);
+				player.handleMovement(this, level, game);
+			}
 
 			level.drawHud(batch, level.levelHudColor, this);
 
@@ -129,6 +137,7 @@ public class LevelRenderer {
 //			}
 
 			drawables.clear();
+			level.checkPause();
 
 		batch.end();
 		sr.end();

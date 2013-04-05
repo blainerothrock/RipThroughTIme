@@ -9,12 +9,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.rip.RipGame;
 import com.rip.objects.Ape;
 import com.rip.objects.Enemy;
 import com.rip.objects.Player;
-//import com.badlogic.gdx.Gdx;
 import com.rip.objects.Raptor;
+//import com.badlogic.gdx.Gdx;
+import com.rip.screens.GameScreen;
+import com.rip.screens.MainMenu;
 
 public abstract class Level {
 
@@ -27,6 +36,9 @@ public abstract class Level {
 	public int levelLength;
 	public String levelName;
 	public String levelHudColor;
+	public Stage stage;
+	
+	
 	
 	public boolean end;
 	
@@ -47,6 +59,15 @@ public abstract class Level {
 	BitmapFont fontBig = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack32.fnt"),false);
 	BitmapFont fontWhite = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite18.fnt"),false);
 	BitmapFont fontBigWhite = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite32.fnt"),false);
+	
+	//////////PAUSE ITEMS//////////
+	BitmapFont black;
+	BitmapFont white;
+	TextureAtlas atlas;
+	Skin skin;
+	TextButton resumeButton;
+	TextButton mainMenuButton;
+	TextButton quitButton;
 		
 	public Level(RipGame game) {
 			this.game = game;
@@ -54,6 +75,8 @@ public abstract class Level {
 			this.player = new Player(250, 158);
 			setIn(new InputHandler(this));
 			Gdx.input.setInputProcessor(getIn());
+			
+			createPauseMenu();
 	}
 	
 	
@@ -192,6 +215,85 @@ public abstract class Level {
 			}
 
 		}
+	}
+	
+	public void createPauseMenu() {
+		stage = new Stage(960, 480, true);
+		
+		atlas = new TextureAtlas("data/button.pack"); //need to create our own button graphic!
+		skin = new Skin();
+		skin.addRegions(atlas);
+		white = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite32.fnt"),false);
+		black = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack32.fnt"),false);
+		
+		TextButtonStyle style = new TextButtonStyle();
+		style.up = skin.getDrawable("buttonnormal");
+		style.down = skin.getDrawable("buttonpressed");
+		style.font = black;
+		
+		resumeButton = new TextButton("Resume", style);
+		resumeButton.setWidth(300);
+		resumeButton.setHeight(75);
+		resumeButton.setX(Gdx.graphics.getWidth() / 2 - 150);
+		resumeButton.setY(Gdx.graphics.getHeight() /2 - resumeButton.getHeight() / 2 + 150);
+		
+		mainMenuButton = new TextButton("Main Menu", style);
+		mainMenuButton.setWidth(300);
+		mainMenuButton.setHeight(75);
+		mainMenuButton.setX(Gdx.graphics.getWidth() / 2 - 150);
+		mainMenuButton.setY(Gdx.graphics.getHeight() /2 - resumeButton.getHeight() / 2 + 50);
+		
+		quitButton = new TextButton("quit", style);
+		quitButton.setWidth(300);
+		quitButton.setHeight(75);
+		quitButton.setX(Gdx.graphics.getWidth() / 2 - 150);
+		quitButton.setY(Gdx.graphics.getHeight() /2 - resumeButton.getHeight() / 2 - 50);
+		
+		resumeButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				LevelRenderer.pause = false;
+			}
+		});
+		
+		mainMenuButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				lr.dispose();
+				game.setScreen(new MainMenu(game));
+			}
+		});
+		
+		quitButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				game.dispose();
+			}
+		});
+	}
+	
+	public void checkPause() {
+		if (LevelRenderer.pause) {
+			stage.clear();
+			Gdx.input.setInputProcessor(stage);
+			stage.addActor(resumeButton);
+			stage.addActor(mainMenuButton);
+			stage.addActor(quitButton);
+			stage.draw();
+		} else {
+			Gdx.input.setInputProcessor(getIn());
+		}
+
+		
 	}
 	
 }

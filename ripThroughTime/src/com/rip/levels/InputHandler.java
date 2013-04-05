@@ -2,6 +2,8 @@ package com.rip.levels;
 
 import java.util.ArrayList;
 
+import renderers.LevelRenderer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -38,7 +40,6 @@ public class InputHandler implements InputProcessor {
 			break;
 		case Keys.L:
 			break;
-		
 		case Keys.W:
 			break;
 		case Keys.S:
@@ -71,6 +72,14 @@ public class InputHandler implements InputProcessor {
 		// TODO Auto-generated method stub
 		player = level.getPlayer();
 		switch(keycode) {
+		case Keys.P:
+			LevelRenderer.pause = !LevelRenderer.pause;
+			Gdx.app.log(RipGame.LOG, "pause status: " + LevelRenderer.pause);
+			if (!LevelRenderer.pause) {
+				Gdx.input.setInputProcessor(this);
+				Gdx.app.log(RipGame.LOG, "input processor set");
+			}
+			break;
 		case Keys.A:
 			if (!player.isATTACK_ANIMATION()) {
 				player.setStateTime(0f);	
