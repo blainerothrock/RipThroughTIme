@@ -3,20 +3,19 @@ package com.rip.objects;
 import java.util.ArrayList;
 import java.util.Random;
 
+import renderers.LevelRenderer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 import com.rip.RipGame;
-import com.rip.objects.MovableEntity.Directions;
-
-import renderers.LevelRenderer;
 
 public abstract class Enemy extends MovableEntity {
 
 	public static boolean HealthDrop;
 	protected float health;
+	protected float totalHealth;
 	protected float damage;
 	boolean collides_player;
 	public boolean attacking = false;
@@ -36,6 +35,8 @@ public abstract class Enemy extends MovableEntity {
 	int trackY;
 	boolean flankPoint1;
 	boolean flankPoint2;
+	boolean backtrack = false;
+	int btX, btY; //backtracking point.
 	
 	public boolean spawnPoint = false;
 	
@@ -144,8 +145,28 @@ public abstract class Enemy extends MovableEntity {
 	
 	public void track(Player p, ArrayList<Enemy> e) {
 		
+		if (backtrack) {
+			backtrack();
+			//Gdx.app.log(RipGame.LOG, "backtrack started . . .");
+			return;
+		}
+		
 		if (this.attacking) {
-			Gdx.app.log(RipGame.LOG, "attacking");
+			//Gdx.app.log(RipGame.LOG, "attacking");
+			int breakChance = r.nextInt(8);
+			if (breakChance == 1 && this.health <= this.totalHealth / 2) {
+				backtrack = true;
+				btX = -1;
+				btY = -1;
+			}
+			if (backtrack && btX == -1 && btY == -1) { 
+				if (dir == Directions.DIR_RIGHT) {
+					btX = p.getX() - (r.nextInt(800 - 500) + 500);
+				} else if (dir == Directions.DIR_LEFT) {
+					btX = p.getX() + (r.nextInt(800 - 500) + 500);
+				}
+				btY = p.getY();
+			}
 			return;
 		}
 		
@@ -184,6 +205,23 @@ public abstract class Enemy extends MovableEntity {
 			return;
 		}
 		return;
+	}
+	
+	public void backtrack() {
+		int dx = btX - x;
+		int dy = btY - y;
+		
+		if (dx > 0) {
+			dir = Directions.DIR_RIGHT;
+		} else if (dx < 0) {
+			dir = Directions.DIR_LEFT;
+		}
+		
+		this.setX(this.getX() + (int)((dx - this.SPEED + 5) * LevelRenderer.delta));
+		this.setY(this.getY() + (int)((dy - this.SPEED + 5) * LevelRenderer.delta));
+		if (Math.abs(dx) <= 125 && Math.abs(dy) <= 125) {
+			backtrack = false;
+		}
 	}
 	
 	public void update_collisions(ArrayList<Enemy> e) {
@@ -229,7 +267,7 @@ public abstract class Enemy extends MovableEntity {
 	
 			//Gdx.app.log(RipGame.LOG, "flank: ");
 	
-			if (flank == false) {
+			if (!flank) {
 				int pX;
 				int pY;
 				boolean positiveY = r.nextBoolean(); 
@@ -439,9 +477,4 @@ public abstract class Enemy extends MovableEntity {
 		Collides_down = collides_down;
 	}
 	
-	
-	
-
-	
-
 }

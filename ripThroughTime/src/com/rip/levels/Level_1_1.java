@@ -155,7 +155,7 @@ public class Level_1_1 extends Level {
 		if (LevelRenderer.camPos >= 1500 && checkPoint1 == false) {
 			Gdx.app.log(RipGame.LOG, "checkpoint1");
 			LevelRenderer.move = false;
-			checkPoint(0,1);
+			spawnApe(1);
 			checkPoint1 = true;
 		}
 
@@ -164,14 +164,14 @@ public class Level_1_1 extends Level {
 		if (LevelRenderer.camPos >= 4000 && checkPoint2 == false && cp2Wave1 == false) {
 			Gdx.app.log(RipGame.LOG, "checkpoint2");
 			LevelRenderer.move = false;
-			checkPoint(0,3);
+			spawnApe(3);
 			cp2Wave1 = true;
 		}
 
 		//wave2
 		if (getEnemies().isEmpty() && cp2Wave2 == false && cp2Wave1 == true) {
 			LevelRenderer.move = false;
-			checkPoint(0,2);
+			spawnApe(2);
 			cp2Wave2 = true;
 			checkPoint2 = true;
 		}
@@ -181,14 +181,14 @@ public class Level_1_1 extends Level {
 		//wave 1
 		if (LevelRenderer.camPos >= 7000 && checkPoint3 == false && cp3Wave1 == false) {
 			LevelRenderer.move = false;
-			checkPoint(0,2);
+			spawnApe(2);
 			cp3Wave1 = true;
 		}
 
 		//wave 2
 		if (getEnemies().isEmpty() && cp3Wave2 == false && cp3Wave1 == true) {
 			LevelRenderer.move = false;
-			checkPoint(1,0);
+			spawnRaptor(1);
 			cp3Wave2 = true;
 			checkPoint3 = true;
 		}
@@ -197,14 +197,14 @@ public class Level_1_1 extends Level {
 		//wave1
 		if (LevelRenderer.camPos >= 11000 && checkPoint4 == false && cp4Wave1 == false) {
 			LevelRenderer.move = false;
-			checkPoint(0,6);
+			spawnApe(6);
 			cp4Wave1 = true;
 		}
 
 		//wave2
 		if (getEnemies().isEmpty() && cp4Wave2 == false && cp4Wave1 == true) {
 			LevelRenderer.move = false;
-			checkPoint(3,0);
+			spawnRaptor(3);
 			cp4Wave2 = true;
 			checkPoint4 = true;
 		}

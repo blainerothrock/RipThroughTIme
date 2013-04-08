@@ -256,6 +256,7 @@ public abstract class Level {
 			
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				LevelRenderer.pause = false;
+				Gdx.input.setInputProcessor(getIn());
 			}
 		});
 		
@@ -289,8 +290,6 @@ public abstract class Level {
 			stage.addActor(mainMenuButton);
 			stage.addActor(quitButton);
 			stage.draw();
-		} else {
-			Gdx.input.setInputProcessor(getIn());
 		}
 
 		

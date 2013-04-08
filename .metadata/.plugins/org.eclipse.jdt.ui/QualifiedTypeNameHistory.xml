@@ -7,4 +7,6 @@
 <fullyQualifiedTypeName name="com.rip.levels.Level_1_2"/>
 <fullyQualifiedTypeName name="com.rip.levels.Level"/>
 <fullyQualifiedTypeName name="renderers.LevelRenderer"/>
+<fullyQualifiedTypeName name="com.rip.screens.MainMenu"/>
+<fullyQualifiedTypeName name="java.lang.Math"/>
 </qualifiedTypeNameHistroy>

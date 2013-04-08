@@ -8,7 +8,7 @@ import com.rip.screens.SplashScreen;
 
 public class RipGame extends Game {
 	
-	public static final String VERSION = "0.0.01 pre-alpha";
+	public static final String VERSION = "0.0.6 pre-alpha";
 	public static final String LOG = "";
 	
 	public static final int WIDTH = 960;
