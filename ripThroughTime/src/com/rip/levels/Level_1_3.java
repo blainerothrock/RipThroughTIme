@@ -41,7 +41,7 @@ public class Level_1_3 extends Level {
 	
 	boolean checkPoint1, checkPoint2, checkPoint3, miniBoss, levelComplete = false;
 	boolean cp1Wave1, cp1Wave2 = false;
-	boolean cp2Wave1, cp2Wave2 = false;
+	boolean cp2Wave1, cp2Wave2, cp2Wave3 = false;
 	boolean cp3Wave1, cp3Wave2, cp3Wave3 = false;
 	boolean end = false;
 	float spawnChance = 0;
@@ -67,6 +67,8 @@ public class Level_1_3 extends Level {
 		
 		if (getEnemies().isEmpty()) {
 			randomSpawnToggle = true;
+		}  else {
+			randomSpawnToggle = false;
 		}
 		
 		if (LevelRenderer.camPos >= 1000 && !checkPoint1 && !cp1Wave1) {
@@ -84,9 +86,13 @@ public class Level_1_3 extends Level {
 			cp2Wave1 = true;
 		} else if (getEnemies().size() <= 2 && cp2Wave1 && !cp2Wave2) {
 			LevelRenderer.move = false;
-			spawnRaptor(4);
+			spawnRaptor(3);
 			cp2Wave2 = true;
-			checkPoint2 = true;
+		} else if (getEnemies().isEmpty() && cp2Wave2 && !cp2Wave3) { 
+			LevelRenderer.move = false;
+			spawnRedRaptor(1);
+			cp2Wave3 = true;
+			checkPoint3 = true;
 		} else if (LevelRenderer.camPos >= 8000 && !checkPoint3 && !cp3Wave1) {
 			LevelRenderer.move = false;
 			spawnApe(2);
@@ -94,19 +100,23 @@ public class Level_1_3 extends Level {
 			cp3Wave1 = true;
 		} else if (getEnemies().isEmpty() && cp3Wave1 && !cp3Wave2) {
 			LevelRenderer.move = false;
-			spawnApe(4);
-			spawnRaptor(2);
+			spawnApe(2);
+			spawnRaptor(1);
+			spawnRedRaptor(2);
 			cp3Wave2 = true;
 		} else if (getEnemies().size() <= 1 && cp3Wave2 && !cp3Wave3) {
 			LevelRenderer.move = false;
 			spawnApe(5);
-			spawnRaptor(2);
+			spawnRedRaptor(2);
 			cp3Wave3 = true;
 			checkPoint3 = true;
 		} else if (LevelRenderer.camPos >= 9000 && !miniBoss) {
 			LevelRenderer.move = false;
 			spawnGoldenRaptor();
 			miniBoss = true;
+		} else if (getEnemies().isEmpty() && miniBoss) {
+			LevelRenderer.move = false;
+			levelComplete = true;
 		} else if (checkPoint1 && !checkPoint3 && randomSpawnToggle) {
 			if (player.getHealth() > player.getTotalHealth() * .75) {
 				randomSpawn(5, 3);
@@ -115,6 +125,12 @@ public class Level_1_3 extends Level {
 			} else {
 				randomSpawn(20, 7);
 			}
+		}
+		
+		if (levelComplete) {
+			//end level.
+			LevelRenderer.move = false;
+			Gdx.app.log(RipGame.LOG, "Level 1_3 Complete.");
 		}
 	}
 	

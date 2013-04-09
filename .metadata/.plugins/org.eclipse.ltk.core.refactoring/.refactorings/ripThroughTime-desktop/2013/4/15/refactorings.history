@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;ripThroughTime-desktop/assets/data/red_raptor_bite .png&apos; to &apos;red_raptor_bite.png&apos;" description="Rename resource &apos;red_raptor_bite .png&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="assets/data/red_raptor_bite .png" name="red_raptor_bite.png" stamp="1365521431438" updateReferences="true"/>
+</session>

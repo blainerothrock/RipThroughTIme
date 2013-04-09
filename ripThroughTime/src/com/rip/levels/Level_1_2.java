@@ -66,6 +66,8 @@ public class Level_1_2 extends Level {
 		
 		if (getEnemies().isEmpty()) {
 			randomSpawnToggle = true;
+		} else {
+			randomSpawnToggle = false;
 		}
 		
 		if (LevelRenderer.camPos >= 1000 && !checkPoint1 && !cp1Wave1) { 

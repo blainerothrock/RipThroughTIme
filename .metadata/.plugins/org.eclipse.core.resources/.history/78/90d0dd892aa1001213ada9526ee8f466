@@ -1,0 +1,307 @@
+package com.rip.objects;
+
+import java.util.ArrayList;
+
+import renderers.LevelRenderer;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.rip.RipGame;
+import com.rip.levels.Level;
+
+
+public class GoldenRaptor extends Raptor {
+	
+	protected Animation raptor_animation;
+	protected TextureRegion currentFrame;
+	
+	protected float stateTime = 0f;
+
+	private static final int WALK_COLS = 10;
+	private static final int WALK_ROWS = 1;
+	
+	private static final int ATTACK_COLS = 3;
+	private static final int ATTACK_ROWS = 1;
+	
+	protected Animation walkAnimationRight;
+	protected Animation walkAnimationLeft;
+	protected Texture walkSheet;
+	protected TextureRegion[] walkFramesRight;
+	protected TextureRegion[] walkFramesLeft;
+	protected TextureRegion currentwalkFrame;
+	
+	protected Animation attackAnimationRight;
+	protected Animation attackAnimationLeft;
+	protected Texture attackSheet;
+	protected TextureRegion[] attackFramesRight;
+	protected TextureRegion[] attackFramesLeft;
+	protected TextureRegion currentattackFrame;
+	
+	Level level;
+	
+	boolean wave1, wave2, wave3 = false;
+	boolean trackToggle = false;
+	
+	
+	public GoldenRaptor(int x, int y, Level level) {
+		super(x, y);
+		create_animations();
+		Sound s[] = {Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_01.wav")),
+				Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_02.wav")),
+				Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_03.wav"))};
+		this.hit_sounds = s;
+		this.level = level;
+		totalHealth = 300;
+		health = totalHealth;
+	}
+	
+	public void create_animations(){
+		int index;
+		
+		//Initiate Walk Animation
+		TextureRegion temp;
+		walkSheet = new Texture(Gdx.files.internal("data/golden_raptor_walk.png"));
+		TextureRegion[][] tmpwRight = TextureRegion.split(walkSheet, walkSheet.getWidth() / WALK_COLS, walkSheet.getHeight() / WALK_ROWS);
+		TextureRegion[][] tmpwLeft = TextureRegion.split(walkSheet, walkSheet.getWidth() / WALK_COLS, walkSheet.getHeight() / WALK_ROWS);
+		walkFramesRight = new TextureRegion[WALK_COLS * WALK_ROWS];
+		walkFramesLeft = new TextureRegion[WALK_COLS * WALK_ROWS];
+		index = 0;
+		for (int i = 0; i < WALK_ROWS; i++) {
+			for (int j = 0; j < WALK_COLS; j++) {
+				temp = tmpwLeft[i][j];
+				walkFramesLeft[index] = temp;
+				//walkFramesLeft[index] = temp;
+				index++;
+			}
+		}
+		
+		
+		index = 0;
+		for (int i = 0; i < WALK_ROWS; i++) {
+			for (int j = 0; j < WALK_COLS; j++) {
+				temp = tmpwRight[i][j];
+				walkFramesRight[index] = temp;
+				walkFramesRight[index].flip(true, false);
+				index++;
+			}
+		}
+
+		walkAnimationRight = new Animation(0.075f, walkFramesRight);
+		walkAnimationLeft = new Animation(0.075f, walkFramesLeft);
+		
+		//Initiate Attack Animation
+		attackSheet = new Texture(Gdx.files.internal("data/golden_raptor_bite.png"));
+		TextureRegion[][] tmpaRight = TextureRegion.split(attackSheet, attackSheet.getWidth() / ATTACK_COLS, attackSheet.getHeight() / ATTACK_ROWS);
+		TextureRegion[][] tmpaLeft = TextureRegion.split(attackSheet, attackSheet.getWidth() / ATTACK_COLS, attackSheet.getHeight() / ATTACK_ROWS);
+		attackFramesRight = new TextureRegion[ATTACK_COLS * ATTACK_ROWS];
+		attackFramesLeft = new TextureRegion[ATTACK_COLS * ATTACK_ROWS];
+		index = 0;
+		for (int i = 0; i < ATTACK_ROWS; i++) {
+			for (int j = 0; j < ATTACK_COLS; j++) {
+				temp = tmpaLeft[i][j];
+				attackFramesLeft[index] = temp;
+				//walkFramesLeft[index] = temp;
+				index++;
+			}
+		}
+		
+		
+		index = 0;
+		for (int i = 0; i < ATTACK_ROWS; i++) {
+			for (int j = 0; j < ATTACK_COLS; j++) {
+				temp = tmpaRight[i][j];
+				attackFramesRight[index] = temp;
+				attackFramesRight[index].flip(true, false);
+				index++;
+			}
+		}
+
+		attackAnimationRight = new Animation(0.2f, attackFramesRight);
+		attackAnimationLeft = new Animation(0.2f, attackFramesLeft);
+		
+		
+		raptor_animation = walkAnimationRight;
+		currentFrame = raptor_animation.getKeyFrame(stateTime, true);
+	}
+	
+	public void setCurrentFrame(float delta) {
+		this.stateTime += delta;
+		
+		if (this.attacking) {
+			if ((this.dir == Directions.DIR_LEFT) && !(raptor_animation == attackAnimationLeft)) {
+				raptor_animation = attackAnimationLeft;
+			} else if ((this.dir == Directions.DIR_RIGHT) && !(raptor_animation == attackAnimationRight)) {
+				raptor_animation = attackAnimationRight;
+			}
+		} else  {
+			 if ((this.dir == Directions.DIR_LEFT) && !(raptor_animation == walkAnimationLeft)) {
+				raptor_animation = walkAnimationLeft;
+			} else if ((this.dir == Directions.DIR_RIGHT) && !(raptor_animation == walkAnimationRight)) {
+				raptor_animation = walkAnimationRight;
+			}
+		}
+		//this.currentFrame = player_animation.getKeyFrame(stateTime, true);
+		if (this.raptor_animation == this.attackAnimationLeft ||
+				this.raptor_animation == this.attackAnimationRight) {
+			Gdx.app.log(RipGame.LOG, "setAttack");
+			this.currentFrame = this.raptor_animation.getKeyFrame(this.stateTime, false);
+		} else { 
+			this.currentFrame = this.raptor_animation.getKeyFrame(this.stateTime, true);
+		}
+	}
+	
+	public void setAttackAnimationLeft(){
+		this.setStateTime(0f);
+		this.raptor_animation = this.attackAnimationLeft;
+		return;
+	}
+	
+	public void setAttackAnimationRight(){
+		this.setStateTime(0f);
+		this.raptor_animation = this.attackAnimationRight;
+		return;
+	}
+	
+	public TextureRegion getCurrentFrame() {
+		return currentFrame;
+	}
+	
+	public Animation getRaptor_animation() {
+		return raptor_animation;
+	}
+
+	public void setRaptor_animation(Animation raptor_animation) {
+		this.raptor_animation = raptor_animation;
+	}
+
+	public float getStateTime() {
+		return stateTime;
+	}
+
+	public void setStateTime(float stateTime) {
+		this.stateTime = stateTime;
+	}
+	
+	@Override
+	public void track(Player p, ArrayList<Enemy> e) {
+		
+		Gdx.app.log(RipGame.LOG, "MiniBoss Health: " + this.health);
+		
+		if (trackToggle && level.getEnemies().size() <= 1) {
+			trackToggle = false;
+		}
+		
+		if (trackToggle) {
+			return;
+		}
+		
+		if (backtrack && btX == -1 && btY == -1) { 
+			btX = LevelRenderer.camPos + RipGame.WIDTH + 500;
+			btY = p.getY();
+			//trackToggle = true;
+			return;
+		}
+		
+		if (backtrack) {
+			backtrack();
+			//Gdx.app.log(RipGame.LOG, "backtrack started . . .");
+			return;
+		}
+		
+		//Gdx.app.log(RipGame.LOG, "attacking");
+		int breakChance = 1;
+		if (breakChance == 1 && this.health <= this.totalHealth * .75 && !wave1) {
+			backtrack = true;
+			btX = -1;
+			btY = -1;
+			return;
+		} else if (this.health <= this.totalHealth * .5 && wave1 && !wave2) {
+			backtrack = true;
+			btX = -1;
+			btY = -1;
+			return;
+		} else if (this.health <= this.totalHealth * .15 && wave2 && !wave3) {
+			backtrack = true;
+			btX = -1;
+			btY = -1;
+			return;
+		}
+		
+		
+		//Gdx.app.log(RipGame.LOG, "track");
+		update_collisions(e);
+		if (this.collides_player) {
+//			Gdx.app.log(RipGame.LOG, "collides player");
+			this.initiate_attack_chance = (float) Math.random();
+			if (this.initiate_attack_chance >= 0.75f) {
+				this.attack(p, e);
+			}
+			this.initiate_attack_chance = 0f;
+			return;
+		} 
+		if ((p.getY() > this.y) && !(this.Collides_Up)) {
+			direct_movement(p);
+		} else if (p.getY() > this.y) {
+			if (!(this.Collides_down)) {
+				flank(p);
+			} else {
+				return;
+			}
+		}
+		// If enemy can go directly at player, do so
+		else if ((p.getX() < this.x) && !(this.Collides_Left)) {
+			direct_movement(p);
+		// If enemy can go directly at player, do so
+		} else if ((p.getX() > this.x) && !(this.Collides_Right)) {
+			direct_movement(p);
+		// If down is not blocked, flank
+		} else if (!(this.Collides_down)) {
+			flank(p);
+		// Else, stay still
+		} else {
+			//Gdx.app.log(RipGame.LOG, "else");
+			return;
+		}
+		return;
+	}
+	
+	@Override
+	public void backtrack() {
+		int dx = btX - x;
+		int dy = btY - y;
+		
+		if (dx > 0) {
+			dir = Directions.DIR_RIGHT;
+		} else if (dx < 0) {
+			dir = Directions.DIR_LEFT;
+		}
+		
+		this.setX(this.getX() + (int)((dx - this.SPEED + 5) * LevelRenderer.delta));
+		this.setY(this.getY() + (int)((dy - this.SPEED + 5) * LevelRenderer.delta));
+		if (Math.abs(dx) <= 125 && Math.abs(dy) <= 125) {
+			backtrack = false;
+			trackToggle = true;
+			if (!wave1) {
+				level.spawnRaptor(2);
+				level.spawnRedRaptor(2);
+				wave1 = true;
+			} else if (wave1 && !wave2) {
+				level.spawnRaptor(3);
+				level.spawnRedRaptor(2);
+				wave2 = true;
+			} else if (wave2 && !wave3) {
+				level.spawnRedRaptor(4);
+				wave3 = true;
+			}
+		}
+		
+		
+	}
+	
+	
+	
+}
+

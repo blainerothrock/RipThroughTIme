@@ -156,7 +156,7 @@ public abstract class Level {
 		} else if (color == "white") {
 			fontWhite.draw(batch, levelName, LevelRenderer.camPos + 800, 470);
 			fontWhite.draw(batch, "Time:     " + (int)LevelRenderer.levelTime, LevelRenderer.camPos + 800, 450);
-			fontWhite.draw(batch, "Score:     " + LevelRenderer.levelScore, LevelRenderer.camPos + 800, 430);
+//			fontWhite.draw(batch, "Score:     " + LevelRenderer.levelScore, LevelRenderer.camPos + 800, 430);
 			batch.draw(healthbaroutlineWhite, LevelRenderer.camPos + 25 - 3, 450 - 3, 206, 21);
 			batch.draw(timebaroutlineWhite, LevelRenderer.camPos + 25 - 3, 425 - 3, 206, 21);
 			
@@ -218,7 +218,7 @@ public abstract class Level {
 	}
 	
 	public void spawnGoldenRaptor() {
-		GoldenRaptor raptor = new GoldenRaptor(LevelRenderer.camPos + RipGame.WIDTH + 200, 140);
+		GoldenRaptor raptor = new GoldenRaptor(LevelRenderer.camPos + RipGame.WIDTH + 200, 140, this);
 		LevelRenderer.enemy_list.add(raptor);
 	}
 	

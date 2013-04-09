@@ -1,0 +1,330 @@
+package com.rip.levels;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import renderers.LevelRenderer;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.rip.RipGame;
+import com.rip.objects.Ape;
+import com.rip.objects.Enemy;
+import com.rip.objects.GoldenRaptor;
+import com.rip.objects.Player;
+import com.rip.objects.Raptor;
+import com.rip.objects.RedRaptor;
+import com.rip.screens.MainMenu;
+//import com.badlogic.gdx.Gdx;
+
+public abstract class Level {
+
+	
+	public RipGame game;
+	Player player;
+	LevelRenderer lr;
+	ArrayList<Enemy> enemies;
+	private InputHandler in;
+	public int levelLength;
+	public String levelName;
+	public String levelHudColor;
+	public Stage stage;
+	
+	
+	
+	public boolean end;
+	
+	Random r = new Random();
+	
+	//////////HUD OBJECTS//////////
+	Texture timeFreezeOverlay = new Texture(Gdx.files.internal("data/timeFreezeOverlay.png"));
+	Texture level_complete = new Texture(Gdx.files.internal("data/level_complete.png"));
+	Texture timebaroutline = new Texture(Gdx.files.internal("data/timebaroutline.png"));
+	Texture timebaroutlineWhite = new Texture(Gdx.files.internal("data/timebaroutlineWhite.png"));
+	Texture timebar = new Texture(Gdx.files.internal("data/timebar.png"));
+	Texture healthbaroutline = new Texture(Gdx.files.internal("data/healthbaroutline.png"));
+	Texture healthbaroutlineWhite = new Texture(Gdx.files.internal("data/healthbaroutlineWhite.png"));
+	Texture healthbar = new Texture(Gdx.files.internal("data/healthbar.png"));
+	Texture pauseOverlay = new Texture(Gdx.files.internal("data/pauseOverlay.png"));
+	Texture timeFreezeLine = new Texture(Gdx.files.internal("data/timeLine.png"));
+	BitmapFont font = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack18.fnt"),false);
+	BitmapFont fontBig = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack32.fnt"),false);
+	BitmapFont fontWhite = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite18.fnt"),false);
+	BitmapFont fontBigWhite = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite32.fnt"),false);
+	
+	//////////PAUSE ITEMS//////////
+	BitmapFont black;
+	BitmapFont white;
+	TextureAtlas atlas;
+	Skin skin;
+	TextButton resumeButton;
+	TextButton mainMenuButton;
+	TextButton quitButton;
+		
+	public Level(RipGame game) {
+			this.game = game;
+			enemies = new ArrayList<Enemy>();
+			this.player = new Player(250, 158);
+			setIn(new InputHandler(this));
+			Gdx.input.setInputProcessor(getIn());
+			
+			createPauseMenu();
+	}
+	
+	
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+	
+	public void setRenderer(LevelRenderer lr) {
+		this.lr = lr;
+	}
+		
+	public Player getPlayer(){
+		return player;
+	}
+	
+	public void update() {
+		player.update();
+	}
+
+//	public Music getLeveltheme() {
+//		return leveltheme;
+//	}
+
+	public InputHandler getIn() {
+		return in;
+	}
+
+	public void setIn(InputHandler in) {
+		this.in = in;
+	}
+
+	
+	public void dispose() {
+		
+	}
+	
+	public void generateBackground() {
+		
+	}
+	
+	public void drawBackground(SpriteBatch batch) {
+		
+	}
+	
+	public void parallax() {
+		
+	}
+	
+	public void handleCheckPoints(LevelRenderer lr) {
+		
+	}
+	
+	public void drawHud(SpriteBatch batch, String color, LevelRenderer lr) {
+		
+		batch.draw(healthbar, LevelRenderer.camPos + 25, 450, player.getHealth()*2, 15);
+		batch.draw(timebar, LevelRenderer.camPos + 25, 425, player.getTime()*2, 15);
+		if (player.getTimeFreeze() == true) {
+			batch.draw(timeFreezeOverlay, LevelRenderer.camPos, 0);
+			batch.draw(timeFreezeLine, LevelRenderer.camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, LevelRenderer.camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, LevelRenderer.camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, LevelRenderer.camPos + r.nextInt(960), 0);
+			batch.draw(timeFreezeLine, LevelRenderer.camPos + r.nextInt(960), 0);
+		}
+		
+		if (color == "black") {
+			font.draw(batch, levelName, LevelRenderer.camPos + 800, 470);
+			font.draw(batch, "Time:     " + (int)LevelRenderer.levelTime, LevelRenderer.camPos + 800, 450);
+			font.draw(batch, "Score:     " + LevelRenderer.levelScore, LevelRenderer.camPos + 800, 430);
+			batch.draw(healthbaroutline, LevelRenderer.camPos + 25 - 3, 450 - 3, 206, 21);
+			batch.draw(timebaroutline, LevelRenderer.camPos + 25 - 3, 425 - 3, 206, 21);
+		} else if (color == "white") {
+			fontWhite.draw(batch, levelName, LevelRenderer.camPos + 800, 470);
+			fontWhite.draw(batch, "Time:     " + (int)LevelRenderer.levelTime, LevelRenderer.camPos + 800, 450);
+			fontWhite.draw(batch, "Score:     " + LevelRenderer.levelScore, LevelRenderer.camPos + 800, 430);
+			batch.draw(healthbaroutlineWhite, LevelRenderer.camPos + 25 - 3, 450 - 3, 206, 21);
+			batch.draw(timebaroutlineWhite, LevelRenderer.camPos + 25 - 3, 425 - 3, 206, 21);
+			
+		} else { }
+		
+		if (player.getTimeFreeze() == false) {
+			LevelRenderer.levelTime = (float)LevelRenderer.levelTime + LevelRenderer.delta;
+		}
+	}
+	
+	/////////Enemy Spawning Functions//////////
+	
+	public void spawnApe(int num) {
+		int buffer = 200;
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+		
+		for (int i = 0; i < num; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				Ape ape = new Ape(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				ape.spawnPoint = true;
+				LevelRenderer.enemy_list.add(ape);
+				buffer += 200;
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new Ape(LevelRenderer.camPos - buffer, r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+	}
+	
+	public void spawnRedRaptor(int num) {
+		int buffer = 200;
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+		
+		for (int i = 0; i < num; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				RedRaptor raptor = new RedRaptor(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				raptor.spawnPoint = true;
+				LevelRenderer.enemy_list.add(raptor);
+				buffer += 200;
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new RedRaptor(LevelRenderer.camPos - buffer, r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+	}
+	
+	public void spawnGoldenRaptor() {
+		GoldenRaptor raptor = new GoldenRaptor(LevelRenderer.camPos + RipGame.WIDTH + 200, 140, this);
+		LevelRenderer.enemy_list.add(raptor);
+	}
+	
+	public void spawnRaptor(int num) {
+		int buffer = 200;
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+
+		for (int i = 0; i < num; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				Raptor raptor = new Raptor(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				raptor.spawnPoint = true;
+				LevelRenderer.enemy_list.add(raptor);
+				buffer += 200;
+				
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new Raptor(LevelRenderer.camPos - buffer , r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+	}
+	
+	public void createPauseMenu() {
+		stage = new Stage(960, 480, true);
+		
+		atlas = new TextureAtlas("data/button.pack"); //need to create our own button graphic!
+		skin = new Skin();
+		skin.addRegions(atlas);
+		white = new BitmapFont(Gdx.files.internal("data/arcadeFontWhite32.fnt"),false);
+		black = new BitmapFont(Gdx.files.internal("data/arcadeFontBlack32.fnt"),false);
+		
+		TextButtonStyle style = new TextButtonStyle();
+		style.up = skin.getDrawable("buttonnormal");
+		style.down = skin.getDrawable("buttonpressed");
+		style.font = black;
+		
+		resumeButton = new TextButton("Resume", style);
+		resumeButton.setWidth(300);
+		resumeButton.setHeight(75);
+		resumeButton.setX(Gdx.graphics.getWidth() / 2 - 150);
+		resumeButton.setY(Gdx.graphics.getHeight() /2 - resumeButton.getHeight() / 2 + 150);
+		
+		mainMenuButton = new TextButton("Main Menu", style);
+		mainMenuButton.setWidth(300);
+		mainMenuButton.setHeight(75);
+		mainMenuButton.setX(Gdx.graphics.getWidth() / 2 - 150);
+		mainMenuButton.setY(Gdx.graphics.getHeight() /2 - resumeButton.getHeight() / 2 + 50);
+		
+		quitButton = new TextButton("quit", style);
+		quitButton.setWidth(300);
+		quitButton.setHeight(75);
+		quitButton.setX(Gdx.graphics.getWidth() / 2 - 150);
+		quitButton.setY(Gdx.graphics.getHeight() /2 - resumeButton.getHeight() / 2 - 50);
+		
+		resumeButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				LevelRenderer.pause = false;
+				Gdx.input.setInputProcessor(getIn());
+			}
+		});
+		
+		mainMenuButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				lr.dispose();
+				game.setScreen(new MainMenu(game));
+			}
+		});
+		
+		quitButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				game.dispose();
+			}
+		});
+	}
+	
+	public void checkPause() {
+		if (LevelRenderer.pause) {
+			stage.clear();
+			Gdx.input.setInputProcessor(stage);
+			stage.addActor(resumeButton);
+			stage.addActor(mainMenuButton);
+			stage.addActor(quitButton);
+			stage.draw();
+		}
+
+		
+	}
+	
+}
+	
+

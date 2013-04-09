@@ -1,14 +1,19 @@
 package com.rip.objects;
 
+import java.util.ArrayList;
+
+import renderers.LevelRenderer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.rip.RipGame;
+import com.rip.levels.Level;
 
 
-public class GoldenRaptor extends MiniBoss {
+public class GoldenRaptor extends Raptor {
 	
 	protected Animation raptor_animation;
 	protected TextureRegion currentFrame;
@@ -35,14 +40,22 @@ public class GoldenRaptor extends MiniBoss {
 	protected TextureRegion[] attackFramesLeft;
 	protected TextureRegion currentattackFrame;
 	
+	Level level;
 	
-	public GoldenRaptor(int x, int y) {
-		super(x, y, 224, 174, 3);
+	boolean wave1, wave2, wave3 = false;
+	boolean trackToggle = false;
+	
+	
+	public GoldenRaptor(int x, int y, Level level) {
+		super(x, y);
 		create_animations();
 		Sound s[] = {Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_01.wav")),
 				Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_02.wav")),
 				Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_03.wav"))};
 		this.hit_sounds = s;
+		this.level = level;
+		totalHealth = 300;
+		health = totalHealth;
 	}
 	
 	public void create_animations(){
@@ -64,7 +77,6 @@ public class GoldenRaptor extends MiniBoss {
 				index++;
 			}
 		}
-		
 		
 		index = 0;
 		for (int i = 0; i < WALK_ROWS; i++) {
@@ -172,7 +184,118 @@ public class GoldenRaptor extends MiniBoss {
 		this.stateTime = stateTime;
 	}
 	
+	@Override
+	public void track(Player p, ArrayList<Enemy> e) {
+		
+		Gdx.app.log(RipGame.LOG, "MiniBoss Health: " + this.health);
+		
+		if (trackToggle && level.getEnemies().size() <= 1) {
+			trackToggle = false;
+		}
+		
+		if (trackToggle) {
+			return;
+		}
+		
+		if (backtrack && btX == -1 && btY == -1) { 
+			btX = LevelRenderer.camPos + RipGame.WIDTH + 500;
+			btY = p.getY();
+			//trackToggle = true;
+			return;
+		}
+		
+		if (backtrack) {
+			backtrack();
+			//Gdx.app.log(RipGame.LOG, "backtrack started . . .");
+			return;
+		}
+		
+		//Gdx.app.log(RipGame.LOG, "attacking");
+		int breakChance = 1;
+		if (breakChance == 1 && this.health <= this.totalHealth * .75 && !wave1) {
+			backtrack = true;
+			btX = -1;
+			btY = -1;
+			return;
+		} else if (this.health <= this.totalHealth * .5 && wave1 && !wave2) {
+			backtrack = true;
+			btX = -1;
+			btY = -1;
+			return;
+		} else if (this.health <= this.totalHealth * .15 && wave2 && !wave3) {
+			backtrack = true;
+			btX = -1;
+			btY = -1;
+			return;
+		}
+		
+		
+		//Gdx.app.log(RipGame.LOG, "track");
+		update_collisions(e);
+		if (this.collides_player) {
+//			Gdx.app.log(RipGame.LOG, "collides player");
+			this.initiate_attack_chance = (float) Math.random();
+			if (this.initiate_attack_chance >= 0.75f) {
+				this.attack(p, e);
+			}
+			this.initiate_attack_chance = 0f;
+			return;
+		} 
+		if ((p.getY() > this.y) && !(this.Collides_Up)) {
+			direct_movement(p);
+		} else if (p.getY() > this.y) {
+			if (!(this.Collides_down)) {
+				flank(p);
+			} else {
+				return;
+			}
+		}
+		// If enemy can go directly at player, do so
+		else if ((p.getX() < this.x) && !(this.Collides_Left)) {
+			direct_movement(p);
+		// If enemy can go directly at player, do so
+		} else if ((p.getX() > this.x) && !(this.Collides_Right)) {
+			direct_movement(p);
+		// If down is not blocked, flank
+		} else if (!(this.Collides_down)) {
+			flank(p);
+		// Else, stay still
+		} else {
+			//Gdx.app.log(RipGame.LOG, "else");
+			return;
+		}
+		return;
+	}
 	
-	
+	@Override
+	public void backtrack() {
+		int dx = btX - x;
+		int dy = btY - y;
+		
+		if (dx > 0) {
+			dir = Directions.DIR_RIGHT;
+		} else if (dx < 0) {
+			dir = Directions.DIR_LEFT;
+		}
+		
+		this.setX(this.getX() + (int)((dx - this.SPEED + 5) * LevelRenderer.delta));
+		this.setY(this.getY() + (int)((dy - this.SPEED + 5) * LevelRenderer.delta));
+		if (Math.abs(dx) <= 125 && Math.abs(dy) <= 125) {
+			backtrack = false;
+			trackToggle = true;
+			if (!wave1) {
+				level.spawnRaptor(2);
+				level.spawnRedRaptor(2);
+				wave1 = true;
+			} else if (wave1 && !wave2) {
+				level.spawnRaptor(3);
+				level.spawnRedRaptor(2);
+				wave2 = true;
+			} else if (wave2 && !wave3) {
+				level.spawnRedRaptor(4);
+				wave3 = true;
+			}
+		}
+	}
 }
 

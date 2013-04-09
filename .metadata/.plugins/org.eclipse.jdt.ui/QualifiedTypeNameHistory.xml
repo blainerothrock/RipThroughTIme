@@ -4,9 +4,9 @@
 <fullyQualifiedTypeName name="com.badlogic.gdx.utils.Timer.Task"/>
 <fullyQualifiedTypeName name="com.badlogic.gdx.Screen"/>
 <fullyQualifiedTypeName name="com.rip.RipGame"/>
-<fullyQualifiedTypeName name="com.rip.levels.Level_1_2"/>
 <fullyQualifiedTypeName name="com.rip.levels.Level"/>
 <fullyQualifiedTypeName name="renderers.LevelRenderer"/>
 <fullyQualifiedTypeName name="com.rip.screens.MainMenu"/>
 <fullyQualifiedTypeName name="java.lang.Math"/>
+<fullyQualifiedTypeName name="com.rip.levels.Level_1_2"/>
 </qualifiedTypeNameHistroy>
