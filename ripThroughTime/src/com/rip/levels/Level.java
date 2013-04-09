@@ -19,11 +19,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.rip.RipGame;
 import com.rip.objects.Ape;
 import com.rip.objects.Enemy;
+import com.rip.objects.GoldenRaptor;
 import com.rip.objects.Player;
 import com.rip.objects.Raptor;
-//import com.badlogic.gdx.Gdx;
-import com.rip.screens.GameScreen;
+import com.rip.objects.RedRaptor;
 import com.rip.screens.MainMenu;
+//import com.badlogic.gdx.Gdx;
 
 public abstract class Level {
 
@@ -190,6 +191,35 @@ public abstract class Level {
 			}
 
 		}
+	}
+	
+	public void spawnRedRaptor(int num) {
+		int buffer = 200;
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+		
+		for (int i = 0; i < num; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				RedRaptor raptor = new RedRaptor(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				raptor.spawnPoint = true;
+				LevelRenderer.enemy_list.add(raptor);
+				buffer += 200;
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new RedRaptor(LevelRenderer.camPos - buffer, r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+	}
+	
+	public void spawnGoldenRaptor() {
+		GoldenRaptor raptor = new GoldenRaptor(LevelRenderer.camPos + RipGame.WIDTH + 200, 140);
+		LevelRenderer.enemy_list.add(raptor);
 	}
 	
 	public void spawnRaptor(int num) {

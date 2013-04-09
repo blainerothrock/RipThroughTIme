@@ -39,11 +39,14 @@ public class Level_1_3 extends Level {
 	Array<BackgroundObject> debris = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> fog = new Array<BackgroundObject>(100);
 	
-	boolean checkPoint1, checkPoint2, checkPoint3, checkPoint4, levelComplete = false;
+	boolean checkPoint1, checkPoint2, checkPoint3, miniBoss, levelComplete = false;
+	boolean cp1Wave1, cp1Wave2 = false;
 	boolean cp2Wave1, cp2Wave2 = false;
-	boolean cp3Wave1, cp3Wave2 = false;
-	boolean cp4Wave1, cp4Wave2 = false;
+	boolean cp3Wave1, cp3Wave2, cp3Wave3 = false;
 	boolean end = false;
+	float spawnChance = 0;
+	boolean spawnToggle = false;
+	boolean randomSpawnToggle = false;
 	
 	public Level_1_3(RipGame game) {
 		super(game);
@@ -51,7 +54,7 @@ public class Level_1_3 extends Level {
 		setIn(new InputHandler(this));
 		Gdx.input.setInputProcessor(getIn());
 		
-		levelLength = 14000;
+		levelLength = 11000;
 		levelName = "Level 1  1";
 		levelHudColor = "black";
 	}
@@ -61,71 +64,88 @@ public class Level_1_3 extends Level {
 		if (getEnemies().isEmpty() && LevelRenderer.move == false && LevelRenderer.camPos < 11500) {
 			LevelRenderer.move = true;
 		}
-
-		//CHECKPOINT 1//
-		if (LevelRenderer.camPos >= 1500 && checkPoint1 == false) {
-			Gdx.app.log(RipGame.LOG, "checkpoint1");
-			LevelRenderer.move = false;
-			spawnApe(1);
-			checkPoint1 = true;
+		
+		if (getEnemies().isEmpty()) {
+			randomSpawnToggle = true;
 		}
-
-		//CHECKPOINT 2//
-		//wave 1
-		if (LevelRenderer.camPos >= 4000 && checkPoint2 == false && cp2Wave1 == false) {
-			Gdx.app.log(RipGame.LOG, "checkpoint2");
+		
+		if (LevelRenderer.camPos >= 1000 && !checkPoint1 && !cp1Wave1) {
 			LevelRenderer.move = false;
 			spawnApe(3);
-			cp2Wave1 = true;
-		}
-
-		//wave2
-		if (getEnemies().isEmpty() && cp2Wave2 == false && cp2Wave1 == true) {
+			cp1Wave1 = true;
+		} else if (getEnemies().size() <= 1 && cp1Wave1 && !cp1Wave2) {
 			LevelRenderer.move = false;
-			spawnApe(2);
-			cp2Wave2 = true;
-			checkPoint2 = true;
-		}
-
-		//CHECKPOINT 3//
-		//wave 1
-		if (LevelRenderer.camPos >= 7000 && checkPoint3 == false && cp3Wave1 == false) {
-			LevelRenderer.move = false;
-			spawnApe(2);
-			cp3Wave1 = true;
-		}
-
-		//wave 2
-		if (getEnemies().isEmpty() && cp3Wave2 == false && cp3Wave1 == true) {
-			LevelRenderer.move = false;
-			spawnRaptor(1);
-			cp3Wave2 = true;
-			checkPoint3 = true;
-		}
-
-		//CHECKPOINT 4 -- FINAL//
-		//wave1
-		if (LevelRenderer.camPos >= 11000 && checkPoint4 == false && cp4Wave1 == false) {
-			LevelRenderer.move = false;
-			spawnApe(6);
-			cp4Wave1 = true;
-		}
-
-		//wave2
-		if (getEnemies().isEmpty() && cp4Wave2 == false && cp4Wave1 == true) {
+			spawnApe(5);
+			cp1Wave2 = true;
+			checkPoint1 = true;
+		} else if (LevelRenderer.camPos >= 4000 && !checkPoint2 && !cp2Wave1) {
 			LevelRenderer.move = false;
 			spawnRaptor(3);
-			cp4Wave2 = true;
-			checkPoint4 = true;
-		}
-
-		//END LEVEL//
-
-		if (checkPoint4 == true && LevelRenderer.camPos >= 11500) {
+			cp2Wave1 = true;
+		} else if (getEnemies().size() <= 2 && cp2Wave1 && !cp2Wave2) {
 			LevelRenderer.move = false;
-			end = true;
-			Gdx.app.log(RipGame.LOG, "End Level 1-1");
-			
+			spawnRaptor(4);
+			cp2Wave2 = true;
+			checkPoint2 = true;
+		} else if (LevelRenderer.camPos >= 8000 && !checkPoint3 && !cp3Wave1) {
+			LevelRenderer.move = false;
+			spawnApe(2);
+			spawnRaptor(1);
+			cp3Wave1 = true;
+		} else if (getEnemies().isEmpty() && cp3Wave1 && !cp3Wave2) {
+			LevelRenderer.move = false;
+			spawnApe(4);
+			spawnRaptor(2);
+			cp3Wave2 = true;
+		} else if (getEnemies().size() <= 1 && cp3Wave2 && !cp3Wave3) {
+			LevelRenderer.move = false;
+			spawnApe(5);
+			spawnRaptor(2);
+			cp3Wave3 = true;
+			checkPoint3 = true;
+		} else if (LevelRenderer.camPos >= 9000 && !miniBoss) {
+			LevelRenderer.move = false;
+			spawnGoldenRaptor();
+			miniBoss = true;
+		} else if (checkPoint1 && !checkPoint3 && randomSpawnToggle) {
+			if (player.getHealth() > player.getTotalHealth() * .75) {
+				randomSpawn(5, 3);
+			} else if (player.getHealth() > player.getTotalHealth() * .25) {
+				randomSpawn(12, 5);
+			} else {
+				randomSpawn(20, 7);
+			}
+		}
+	}
+	
+	public void randomSpawn(int freq, int prob) {
+		if (spawnChance >= freq && spawnToggle) {
+			spawnChance = 0;
+			if (r.nextInt(prob) == 1) {
+				float ran2 = r.nextFloat();
+				if (ran2 <= .5) {
+					spawnApe(2);
+				} else if (ran2 > .5 && ran2 <= .7) {
+					spawnRaptor(2);
+				} else {
+					spawnApe(1);
+					spawnRaptor(1);
+				}
+			} else {
+				float ran2 = r.nextFloat();
+				if (ran2 <= .5) {
+					spawnApe(1);
+				} else {
+					spawnRaptor(1);
+				}
+			}
+			spawnToggle = false;
+		} else {
+			spawnChance += r.nextFloat() * LevelRenderer.delta;
+		}
+		
+		if (spawnChance >= freq && !spawnToggle) {
+			spawnToggle = true;
 		}
 	}
 	

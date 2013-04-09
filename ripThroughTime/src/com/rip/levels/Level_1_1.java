@@ -39,10 +39,11 @@ public class Level_1_1 extends Level {
 	Array<BackgroundObject> debris = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> fog = new Array<BackgroundObject>(100);
 
-	boolean checkPoint1, checkPoint2, checkPoint3, checkPoint4, levelComplete = false;
+	boolean checkPoint1, checkPoint2, checkPoint3, levelComplete = false;
 	boolean cp2Wave1, cp2Wave2 = false;
 	boolean cp3Wave1, cp3Wave2 = false;
-	boolean cp4Wave1, cp4Wave2 = false;
+	float spawnChance = 0;
+	boolean spawnToggle, randomSpawnToggle = false;
 	//public boolean end = false;
 
 	public Level_1_1(RipGame game) {
@@ -59,84 +60,11 @@ public class Level_1_1 extends Level {
 //			leveltheme = Gdx.audio.newMusic(Gdx.files.internal("data/Prehistoric Main.mp3"));
 //			leveltheme.setLooping(true);
 
-			levelLength = 14000;
+			levelLength = 10000;
 			levelName = "Level 1  1";
 			levelHudColor = "black";
 	}
 
-	public void checkPoint(int numOfEnemiesRap, int numOfEnemiesApe) {
-		Random r = new Random();
-		int rightside;
-		int leftside;
-		boolean lr;
-		int x;
-		int y;
-		int xmin_right, xmax_right, xmin_left, xmax_left;
-		int ymin, ymax;
-		
-		//avoid initiating with overlap
-		ymax = LevelRenderer.Y_LIMIT;
-		ymin = LevelRenderer.Y_LIMIT - 87;
-		
-		xmin_right = LevelRenderer.camPos + RipGame.WIDTH + 50;
-		xmax_right = xmin_right + 224;
-		
-		xmax_left = LevelRenderer.camPos - 50;
-		xmin_left = xmax_left - 224;
-		
-		for (int i = 0; i < numOfEnemiesRap; i++) {
-			lr = r.nextBoolean();
-			if (lr) {
-				rightside = LevelRenderer.camPos + RipGame.WIDTH;
-				x = generateXY(xmin_right, xmax_right);
-				y = generateXY(ymin, ymax);
-				
-				ymin -= 87;
-				ymax -= 87;
-				
-				if (ymax <= LevelRenderer.Y_LIMIT - 300) {
-					ymax = LevelRenderer.Y_LIMIT;
-					ymin = LevelRenderer.Y_LIMIT - 87;
-				}
-				
-				xmax_right += 224;
-				xmin_right += 224;
-				
-				enemies.add(new Raptor(x, y));
-			} else {
-				leftside = LevelRenderer.camPos;
-				x = generateXY(xmin_right, xmax_right);
-				y = generateXY(ymin, ymax);
-				
-				ymin -= 87;
-				ymax -= 87;
-				
-				if (ymax <= LevelRenderer.Y_LIMIT - 300) {
-					ymax = LevelRenderer.Y_LIMIT;
-					ymin = LevelRenderer.Y_LIMIT - 87;
-				}
-				
-				xmax_left -= 224;
-				xmin_left -= 224;
-				enemies.add(new Raptor(x, y));
-			}
-
-		}
-		
-		
-
-		for (int i = 0; i < numOfEnemiesApe; i++) {
-			lr = r.nextBoolean();
-			if (lr) {
-				rightside = LevelRenderer.camPos + RipGame.WIDTH;
-				enemies.add(new Ape(r.nextInt((rightside + RipGame.WIDTH) - (rightside + 50)) + (rightside + 50), r.nextInt(LevelRenderer.Y_LIMIT)));
-			} else {
-				leftside = LevelRenderer.camPos;
-				enemies.add(new Ape(r.nextInt((leftside - 50) - (leftside - RipGame.WIDTH)) + (leftside - RipGame.WIDTH), r.nextInt(LevelRenderer.Y_LIMIT)));
-			}
-
-		}
-	}
 	
 	
 	
@@ -150,72 +78,66 @@ public class Level_1_1 extends Level {
 		if (getEnemies().isEmpty() && LevelRenderer.move == false && LevelRenderer.camPos < 11500) {
 			LevelRenderer.move = true;
 		}
+		
+		if (getEnemies().isEmpty()) {
+			randomSpawnToggle = true;
+		}
 
-		//CHECKPOINT 1//
-		if (LevelRenderer.camPos >= 1500 && checkPoint1 == false) {
-			Gdx.app.log(RipGame.LOG, "checkpoint1");
+		if (LevelRenderer.camPos >= 1000 && !checkPoint1) {
 			LevelRenderer.move = false;
 			spawnApe(1);
 			checkPoint1 = true;
-		}
-
-		//CHECKPOINT 2//
-		//wave 1
-		if (LevelRenderer.camPos >= 4000 && checkPoint2 == false && cp2Wave1 == false) {
-			Gdx.app.log(RipGame.LOG, "checkpoint2");
+		} else if (LevelRenderer.camPos >= 4000 && !checkPoint2 && !cp2Wave1) {
 			LevelRenderer.move = false;
 			spawnApe(3);
 			cp2Wave1 = true;
-		}
-
-		//wave2
-		if (getEnemies().isEmpty() && cp2Wave2 == false && cp2Wave1 == true) {
+		} else if (getEnemies().size() <= 1 && !cp2Wave2 && cp2Wave1) {
 			LevelRenderer.move = false;
 			spawnApe(2);
 			cp2Wave2 = true;
 			checkPoint2 = true;
-		}
-		
-
-		//CHECKPOINT 3//
-		//wave 1
-		if (LevelRenderer.camPos >= 7000 && checkPoint3 == false && cp3Wave1 == false) {
+		} else if (LevelRenderer.camPos >= 8000 && !checkPoint3 && !cp3Wave1) {
 			LevelRenderer.move = false;
-			spawnApe(2);
+			spawnApe(4);
 			cp3Wave1 = true;
-		}
-
-		//wave 2
-		if (getEnemies().isEmpty() && cp3Wave2 == false && cp3Wave1 == true) {
+		} else if (getEnemies().size() <= 1 && !cp3Wave2 && cp3Wave1) {
 			LevelRenderer.move = false;
-			spawnRaptor(1);
+			spawnApe(3);
 			cp3Wave2 = true;
 			checkPoint3 = true;
+			levelComplete = true;
+		} else if (checkPoint1 && !levelComplete && randomSpawnToggle) {
+			if (player.getHealth() > player.getTotalHealth() * .75) {
+				randomSpawn(5, 3);
+			} else if (player.getHealth() > player.getTotalHealth() * .25) {
+				randomSpawn(12, 5);
+			} else {
+				randomSpawn(20, 7);
+			}
 		}
-
-		//CHECKPOINT 4 -- FINAL//
-		//wave1
-		if (LevelRenderer.camPos >= 11000 && checkPoint4 == false && cp4Wave1 == false) {
+			
+		if (levelComplete) {
+			//end level.
 			LevelRenderer.move = false;
-			spawnApe(6);
-			cp4Wave1 = true;
+			Gdx.app.log(RipGame.LOG, "End level 1_1");
 		}
-
-		//wave2
-		if (getEnemies().isEmpty() && cp4Wave2 == false && cp4Wave1 == true) {
-			LevelRenderer.move = false;
-			spawnRaptor(3);
-			cp4Wave2 = true;
-			checkPoint4 = true;
+	}
+	
+	public void randomSpawn(int freq, int prob) {
+		if (spawnChance >= freq && spawnToggle) {
+			spawnChance = 0;
+			if (r.nextInt(prob) == 1) {
+				spawnApe(2);
+			} else {
+				spawnApe(1);
+			}
+			spawnToggle = false;
+		} else {
+			spawnChance += r.nextFloat() * LevelRenderer.delta;
 		}
-
-		//END LEVEL//
-
-		if (checkPoint4 == true && LevelRenderer.camPos >= 11500) {
-			LevelRenderer.move = false;
-			end = true;
-			Gdx.app.log(RipGame.LOG, "End Level 1-1");
-
+		
+		if (spawnChance >= freq && !spawnToggle) {
+			spawnToggle = true;
 		}
 	}
 

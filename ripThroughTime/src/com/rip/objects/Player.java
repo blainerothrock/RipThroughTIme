@@ -24,6 +24,7 @@ public class Player extends MovableEntity {
 
 	Texture punch;
 	float health;
+	float totalHealth = 100;
 	float punch_damage;
 	float kick_damage;
 	float time;
@@ -131,7 +132,7 @@ public class Player extends MovableEntity {
 
 	public Player(int x, int y, float width, float height, int SPEED, Texture text) {
 		super(x, y, width, height, SPEED, text);
-		this.health = 100;
+		this.health = this.totalHealth;
 		this.punch_damage = 10;
 		this.kick_damage = 15;
 		CreateAnimations();
@@ -140,7 +141,7 @@ public class Player extends MovableEntity {
 
 	public Player(int x, int y) {
 		super(x, y, 128, 163, 3, RIGHT);
-		this.health = 100;
+		this.health = this.totalHealth;
 		this.punch_damage = 10;
 		this.kick_damage = 15;
 		CreateAnimations();
@@ -264,13 +265,13 @@ public class Player extends MovableEntity {
 
 	}
 
-
-
+	public float getTotalHealth() {
+		return this.totalHealth;
+	}
+	
 	public float getHealth() {
 		return health;
 	}
-
-
 
 	public void setHealth(float health) {
 		this.health = health;
