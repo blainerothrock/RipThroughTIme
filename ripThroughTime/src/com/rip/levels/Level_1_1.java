@@ -87,7 +87,7 @@ public class Level_1_1 extends Level {
 
 		if (LevelRenderer.camPos >= 1000 && !checkPoint1) {
 			LevelRenderer.move = false;
-			spawnApe(1);
+			spawnSuperApe(1);
 			checkPoint1 = true;
 		} else if (LevelRenderer.camPos >= 4000 && !checkPoint2 && !cp2Wave1) {
 			LevelRenderer.move = false;

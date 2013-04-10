@@ -32,9 +32,20 @@ public class Level_1_5 extends Level {
 	Array<BackgroundObject> trees = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> treesFg = new Array<BackgroundObject>(100);
 	Array<BackgroundObject> volcanos = new Array<BackgroundObject>(100);
+	boolean checkPoint1, checkPoint2, checkPoint3, checkPoint4, boss, levelComplete = false;
+	boolean cp2Wave1, cp2Wave2 = false;
+	boolean cp3Wave1, cp3Wave2 = false;
+	boolean cp4Wave1, cp4Wave2, cp4Wave3 = false;
+	float spawnChance = 0;
+	boolean spawnToggle = false;
+	boolean randomSpawnToggle = false;
 	
 	public Level_1_5(RipGame game) {
 		super(game);
+		this.player = new Player(250, 158);
+		setIn(new InputHandler(this));
+		Gdx.input.setInputProcessor(getIn());
+		
 		levelLength = 14000;
 		levelName = "Level 1   5";
 		levelHudColor = "black";
@@ -42,7 +53,116 @@ public class Level_1_5 extends Level {
 	
 	@Override
 	public void handleCheckPoints(LevelRenderer lr) {
+		if (getEnemies().isEmpty() && LevelRenderer.move == false && LevelRenderer.camPos < 11500) {
+			LevelRenderer.move = true;
+		}
 		
+		if (getEnemies().isEmpty()) {
+			randomSpawnToggle = true;
+		}  else {
+			randomSpawnToggle = false;
+		}
+		
+		if (LevelRenderer.camPos >= 1000 && !checkPoint1) {
+			LevelRenderer.move = false;
+			spawnApe(1);
+			spawnRaptor(1);
+			spawnSuperApe(1);
+			checkPoint1 = true;
+		} else if (LevelRenderer.camPos >= 4000 && !checkPoint2 && !cp2Wave1) {
+			LevelRenderer.move = false;
+			spawnApe(2);
+			spawnSuperApe(1);
+			cp2Wave1 = true;
+		} else if (getEnemies().size() <= 1 && cp2Wave1 && !cp2Wave2) {
+			LevelRenderer.move = false;
+			spawnSuperApe(1);
+			spawnRedRaptor(1);
+			cp2Wave2 = true;
+			checkPoint2 = true;
+		} else if (LevelRenderer.camPos >= 7000 && !checkPoint3 && !cp3Wave1) {
+			LevelRenderer.move = false;
+			spawnApe(3);
+			spawnRaptor(2);
+			cp3Wave1 = true;
+		} else if (getEnemies().size() <= 2 && cp3Wave1 && !cp3Wave2) {
+			LevelRenderer.move = false;
+			spawnSuperApe(2);
+			cp3Wave2 = true;
+			checkPoint3 = true;
+		} else if (LevelRenderer.camPos >= 10000 && !checkPoint4 && !cp4Wave1) {
+			LevelRenderer.move = false;
+			spawnSuperApe(1);
+			spawnRedRaptor(1);
+			spawnApe(1);
+			cp4Wave1 = true;
+		} else if (getEnemies().isEmpty() && cp4Wave1 && !cp4Wave2) {
+			LevelRenderer.move = false;
+			spawnRaptor(3);
+			spawnApe(3);
+			cp4Wave2 = true;
+		} else if (getEnemies().size() <= 3 && cp4Wave2 && !cp4Wave3) {
+			LevelRenderer.move = false;
+			spawnApe(4);
+			spawnRedRaptor(2);
+			spawnSuperApe(2);
+			cp4Wave3 = true;
+			checkPoint4 = true;
+		} else if (LevelRenderer.camPos >= 12000 && !boss) {
+			LevelRenderer.move = false;
+			//fight lucy.
+			boss = true;
+			levelComplete = true;
+		} else if (checkPoint1 && !checkPoint4 && randomSpawnToggle) {
+			if (player.getHealth() > player.getTotalHealth() * .75) {
+				randomSpawn(5, 3);
+			} else if (player.getHealth() > player.getTotalHealth() * .25) {
+				randomSpawn(12, 5);
+			} else {
+				randomSpawn(20, 7);
+			}
+		}
+	}
+	
+	public void randomSpawn(int freq, int prob) {
+		if (spawnChance >= freq && spawnToggle) {
+			spawnChance = 0;
+			if (r.nextInt(prob) == 1) {
+				float ran2 = r.nextFloat();
+				if (ran2 <= .25) {
+					spawnApe(2);
+				} else if ( ran2 <= .5 && ran2 > .25) {
+					spawnRaptor(2);
+				} else if (ran2 > .5 && ran2 <= .7) {
+					spawnRaptor(1);
+					spawnApe(1);
+				} else if (ran2 > .7 && ran2 <= .85) {
+					spawnSuperApe(1);
+					spawnRaptor(1);
+				} else {
+					spawnApe(1);
+					spawnRedRaptor(1);
+				}
+			} else {
+				float ran2 = r.nextFloat();
+				if (ran2 <= .3) {
+					spawnApe(1);
+				} else if (ran2 > .3 && ran2 <= .6) { 
+					spawnRaptor(1);
+				} else if (ran2 > .6 && ran2 <= .8) {
+					spawnRedRaptor(1);
+				} else {
+					spawnSuperApe(1);
+				}
+			}
+			spawnToggle = false;
+		} else {
+			spawnChance += r.nextFloat() * LevelRenderer.delta;
+		}
+		
+		if (spawnChance >= freq && !spawnToggle) {
+			spawnToggle = true;
+		}
 	}
 	
 	@Override

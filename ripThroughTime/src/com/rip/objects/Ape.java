@@ -46,6 +46,10 @@ public class Ape extends LowLevelEnemy {
 		
 		create_animations();
 		// TODO Auto-generated constructor stub
+		
+		this.totalHealth = 35;
+		this.health = this.totalHealth;
+		this.damage = 5;
 	}
 	
 	public void create_animations(){

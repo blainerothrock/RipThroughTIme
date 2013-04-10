@@ -55,7 +55,8 @@ public class GoldenRaptor extends Raptor {
 		this.hit_sounds = s;
 		this.level = level;
 		totalHealth = 300;
-		health = totalHealth;
+		this.health = totalHealth;
+		this.damage = 20;
 	}
 	
 	public void create_animations(){

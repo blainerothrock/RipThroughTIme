@@ -23,6 +23,7 @@ import com.rip.objects.GoldenRaptor;
 import com.rip.objects.Player;
 import com.rip.objects.Raptor;
 import com.rip.objects.RedRaptor;
+import com.rip.objects.SuperApe;
 import com.rip.screens.MainMenu;
 //import com.badlogic.gdx.Gdx;
 
@@ -187,6 +188,30 @@ public abstract class Level {
 			} else {
 				leftside = LevelRenderer.camPos;
 				LevelRenderer.enemy_list.add(new Ape(LevelRenderer.camPos - buffer, r.nextInt(LevelRenderer.Y_LIMIT)));
+				buffer += 200;
+			}
+
+		}
+	}
+	
+	public void spawnSuperApe(int num) {
+		int buffer = 200;
+		Random r = new Random();
+		int rightside;
+		int leftside;
+		boolean lr;
+		
+		for (int i = 0; i < num; i++) {
+			lr = r.nextBoolean();
+			if (lr) {
+				rightside = LevelRenderer.camPos + RipGame.WIDTH;
+				SuperApe ape = new SuperApe(LevelRenderer.camPos + RipGame.WIDTH + buffer, r.nextInt(LevelRenderer.Y_LIMIT));
+				ape.spawnPoint = true;
+				LevelRenderer.enemy_list.add(ape);
+				buffer += 200;
+			} else {
+				leftside = LevelRenderer.camPos;
+				LevelRenderer.enemy_list.add(new SuperApe(LevelRenderer.camPos - buffer, r.nextInt(LevelRenderer.Y_LIMIT)));
 				buffer += 200;
 			}
 

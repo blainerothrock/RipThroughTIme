@@ -43,6 +43,10 @@ public class RedRaptor extends Raptor {
 				Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_02.wav")),
 				Gdx.audio.newSound(Gdx.files.internal("data/RapterGrunt_03.wav"))};
 		this.hit_sounds = s;
+		
+		this.totalHealth = 50;
+		this.health = this.totalHealth;
+		this.damage = 10;
 	}
 	
 	public void create_animations(){

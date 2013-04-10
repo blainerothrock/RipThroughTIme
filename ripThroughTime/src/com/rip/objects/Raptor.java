@@ -46,6 +46,10 @@ public class Raptor extends LowLevelEnemy {
 		this.hit_sounds = s;
 		this.hitableBox = new Rectangle(this.x + boxset, 
 				this.y + (height/3), (width * 0.7f), (height / 3));
+		
+		this.totalHealth = 40;
+		this.health = this.totalHealth;
+		this.damage = 7;
 	}
 	
 	public void create_animations(){
